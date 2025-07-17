@@ -1,0 +1,4038 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电工一级技师理论题库</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36D399',
+                        danger: '#F87272',
+                        warning: '#FBBD23',
+                        dark: '#1E293B'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .btn-hover {
+                @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- 导航栏 -->
+        <nav class="bg-white rounded-xl shadow-md mb-8 p-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-book text-primary text-2xl"></i>
+                <h1 class="text-xl font-bold text-primary">电工一级技师理论题库</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="homeBtn" class="text-primary hover:text-primary/80 transition-colors">
+                    <i class="fa fa-home mr-1"></i> 首页
+                </button>
+                <button id="wrongBtn" class="text-dark hover:text-primary transition-colors">
+                    <i class="fa fa-exclamation-circle mr-1"></i> 错题库
+                    <span id="wrongCount" class="bg-danger text-white text-xs rounded-full px-2 py-0.5 ml-1">0</span>
+                </button>
+                <button id="statsBtn" class="text-dark hover:text-primary transition-colors">
+                    <i class="fa fa-bar-chart mr-1"></i> 统计
+                </button>
+            </div>
+        </nav>
+        
+        <!-- 主内容区 -->
+        <main>
+            <!-- 欢迎页面 -->
+            <div id="welcomePage">
+                <div class="bg-white rounded-xl shadow-md p-8">
+                    <div class="text-center mb-8">
+                        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-4">
+                            <i class="fa fa-bolt text-primary text-4xl"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-dark mb-2">欢迎使用电工一级技师理论题库</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto mb-6">
+                            本题库包含《一级技师理论题库--电工2025》全部题目，助力考试备考
+                        </p>
+                        
+                        <!-- 题库总数量显示 -->
+                        <div class="inline-flex items-center bg-gray-50 px-4 py-2 rounded-lg text-gray-700 mb-6">
+                            <i class="fa fa-list-alt text-primary mr-2"></i>
+                            <span>题库总题数：</span>
+                            <span id="totalQuestionCount" class="font-bold text-primary ml-2">370</span>
+                            <span class="mx-1">道</span>
+                            <span class="mx-2">|</span>
+                            <span>选择题：140道</span>
+                            <span class="mx-2">|</span>
+                            <span>判断题：140道</span>
+                            <span class="mx-2">|</span>
+                            <span>填空题：60道</span>
+                            <span class="mx-2">|</span>
+                            <span>问答题：20道</span>
+                            <span class="mx-2">|</span>
+                            <span>综合题：10道</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm btn-hover cursor-pointer" onclick="startPractice('normal')">
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                                <i class="fa fa-pencil text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-dark mb-2">常规练习</h3>
+                            <p class="text-gray-600">按顺序练习所有题目，随时查看解析</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm btn-hover cursor-pointer" onclick="startPractice('exam')">
+                            <div class="w-12 h-12 rounded-full bg-warning/10 flex items-center justify-center mb-4">
+                                <i class="fa fa-clock-o text-warning text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-dark mb-2">模拟考试</h3>
+                            <p class="text-gray-600">随机抽取60道题，模拟真实考试环境</p>
+                        </div>
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm btn-hover cursor-pointer" id="wrongPracticeBtn">
+                            <div class="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center mb-4">
+                                <i class="fa fa-exclamation-triangle text-danger text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-dark mb-2">错题练习</h3>
+                            <p class="text-gray-600">针对性练习答错的题目，强化薄弱点</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 练习页面 -->
+            <div id="practicePage" class="hidden">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <span id="currentMode" class="inline-block bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full">常规练习</span>
+                            <span id="questionProgress" class="ml-4 text-gray-600">1/370</span>
+                        </div>
+                        <div id="timer" class="hidden text-gray-600">
+                            <i class="fa fa-clock-o mr-1"></i> <span id="timeRemaining">60:00</span>
+                        </div>
+                    </div>
+                    <div id="questionContainer" class="mb-8">
+                        <h3 id="questionText" class="text-xl font-semibold text-dark mb-6">题目将在这里显示</h3>
+                        
+                        <div id="optionsContainer" class="space-y-4 mb-8">
+                            <!-- 选项将通过JS动态生成 -->
+                        </div>
+                        <div id="answerFeedback" class="hidden p-4 rounded-lg mt-6">
+                            <div id="feedbackIcon" class="w-10 h-10 rounded-full flex items-center justify-center mb-3"></div>
+                            <h4 id="feedbackText" class="font-medium mb-2"></h4>
+                            <p id="explanationText" class="text-gray-600"></p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <button id="prevBtn" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fa fa-arrow-left mr-1"></i> 上一题
+                        </button>
+                        <button id="submitBtn" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors btn-hover">
+                            提交答案
+                        </button>
+                        <button id="nextBtn" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            下一题 <i class="fa fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h4 class="font-semibold text-dark mb-4">题目导航</h4>
+                    <div id="questionNav" class="flex flex-wrap gap-2">
+                        <!-- 题目导航将通过JS动态生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 结果页面 -->
+            <div id="resultPage" class="hidden">
+                <div class="bg-white rounded-xl shadow-md p-8 text-center">
+                    <div id="resultIcon" class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-6">
+                        <i class="text-5xl"></i>
+                    </div>
+                    <h2 id="resultTitle" class="text-2xl font-bold text-dark mb-2"></h2>
+                    <p id="resultScore" class="text-4xl font-bold text-primary mb-6"></p>
+                    
+                    <div class="max-w-md mx-auto mb-8">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <p class="text-sm text-gray-500 mb-1">总题数</p>
+                                <p id="totalQuestions" class="text-xl font-bold text-dark">0</p>
+                            </div>
+                            <div class="bg-secondary/10 rounded-lg p-4">
+                                <p class="text-sm text-gray-600 mb-1">正确</p>
+                                <p id="correctAnswers" class="text-xl font-bold text-secondary">0</p>
+                            </div>
+                            <div class="bg-danger/10 rounded-lg p-4">
+                                <p class="text-sm text-gray-600 mb-1">错误</p>
+                                <p id="wrongAnswers" class="text-xl font-bold text-danger">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button id="reviewBtn" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors btn-hover">
+                            <i class="fa fa-book mr-1"></i> 查看错题
+                        </button>
+                        <button id="restartBtn" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors btn-hover">
+                            <i class="fa fa-refresh mr-1"></i> 重新练习
+                        </button>
+                        <button id="homeFromResultBtn" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors btn-hover">
+                            <i class="fa fa-home mr-1"></i> 返回首页
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 错题库页面 -->
+            <div id="wrongPage" class="hidden">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-dark">我的错题</h2>
+                        <button id="clearWrongBtn" class="text-danger hover:text-danger/80 transition-colors">
+                            <i class="fa fa-trash mr-1"></i> 清空错题库
+                        </button>
+                    </div>
+                    
+                    <div id="wrongQuestionsList" class="space-y-6">
+                        <div class="text-center text-gray-500 py-12">
+                            <i class="fa fa-check-circle text-4xl mb-3 text-secondary"></i>
+                            <p>恭喜！你还没有错题记录</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 统计页面 -->
+            <div id="statsPage" class="hidden">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-bold text-dark mb-6">学习统计</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-primary/5 rounded-lg p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <p class="text-sm text-gray-500">总练习次数</p>
+                                    <h3 id="totalPracticeCount" class="text-2xl font-bold text-primary mt-1">0</h3>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                    <i class="fa fa-calendar-check-o text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-secondary/5 rounded-lg p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <p class="text-sm text-gray-500">正确率</p>
+                                    <h3 id="correctRate" class="text-2xl font-bold text-secondary mt-1">0%</h3>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center">
+                                    <i class="fa fa-check-circle text-secondary"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-danger/5 rounded-lg p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <p class="text-sm text-gray-500">错题数量</p>
+                                    <h3 id="wrongCountStats" class="text-2xl font-bold text-danger mt-1">0</h3>
+                                </div>
+                                <div class="w-10 h-10 rounded-full bg-danger/10 flex items-center justify-center">
+                                    <i class="fa fa-exclamation-triangle text-danger"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-lg border border-gray-200 p-5">
+                            <h4 class="font-semibold text-dark mb-4">题型正确率</h4>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>选择题</span>
+                                        <span id="mcqRate">0%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="mcqRateBar" class="bg-primary h-2 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>判断题</span>
+                                        <span id="tfqRate">0%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="tfqRateBar" class="bg-secondary h-2 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-1">
+                                        <span>填空题</span>
+                                        <span id="fillRate">0%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="fillRateBar" class="bg-warning h-2 rounded-full" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-lg border border-gray-200 p-5">
+                            <h4 class="font-semibold text-dark mb-4">最近练习情况</h4>
+                            <div id="practiceHistory" class="space-y-3">
+                                <div class="text-center text-gray-500 py-6">
+                                    <p>暂无练习记录</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 《一级技师理论题库--电工2025》完整题库
+        const questionBank = [
+            // 一、单项选择题（140道）
+            {
+                id: 1,
+                type: 'mcq',
+                question: '职业道德通过（   ），起着增强企业凝聚力的作用。',
+                options: ['协调员工之间的关系', '增加职工福利', '为员工创造发展空间', '调节企业与社会的关系'],
+                answer: 'A',
+                explanation: '职业道德通过协调员工之间的关系，形成良好的工作氛围，从而增强企业凝聚力。'
+            },
+            {
+                id: 2,
+                type: 'mcq',
+                question: '下列说法中，不符合语言规范具体要求的是（   ）。',
+                options: ['语感自然，不呆板', '用尊称，不用忌语', '语速适中，不快不慢', '多使用幽默语言，调节气氛'],
+                answer: 'D',
+                explanation: '语言规范要求得体、恰当，过度使用幽默可能会影响沟通效果或引起误解。'
+            },
+            {
+                id: 3,
+                type: 'mcq',
+                question: '企业创新要求员工努力做到（   ）。',
+                options: [
+                    '不能墨守成规，但也不能标新立异',
+                    '大胆地破除现有的结论，自创理论体系',
+                    '大胆地试大胆地闯，敢于提出新问题',
+                    '激发人的灵感，遏制冲动和情感'
+                ],
+                answer: 'C',
+                explanation: '企业创新需要员工勇于尝试，敢于提出新问题和新解决方案。'
+            },
+            {
+                id: 4,
+                type: 'mcq',
+                question: '企业生产经营活动中，要求员工遵纪守法是（   ）。',
+                options: [
+                    '约束人的体现',
+                    '保证经济活动正常进行所决定的',
+                    '领导者人为的规定',
+                    '追求利益的体现'
+                ],
+                answer: 'B',
+                explanation: '遵纪守法是保证企业生产经营活动有序进行的基本要求。'
+            },
+            {
+                id: 5,
+                type: 'mcq',
+                question: '作为一名工作认真负责的员工，应该是（   ）。',
+                options: [
+                    '领导说什么就做什么',
+                    '领导亲自安排的工作认真做，其他工作可以马虎一点',
+                    '面上的工作要做仔细一些，看不到的工作可以快一些',
+                    '工作不分大小，都要认真去做'
+                ],
+                answer: 'D',
+                explanation: '负责任的员工会认真对待每一项工作，无论大小。'
+            },
+            {
+                id: 6,
+                type: 'mcq',
+                question: '企业生产经营活动中，促进员工之间团结合作的措施是（   ）。',
+                options: [
+                    '互利互惠，平均分配',
+                    '加强交流，平等对话',
+                    '只要合作，不要竞争',
+                    '人心叵测，谨慎行事'
+                ],
+                answer: 'B',
+                explanation: '加强交流和平等对话是促进员工团结合作的有效措施。'
+            },
+            {
+                id: 7,
+                type: 'mcq',
+                question: '绝缘材料的电阻受（   ）、水份、灰尘等影响较大。',
+                options: ['温度', '干燥', '材料', '电源'],
+                answer: 'A',
+                explanation: '温度对绝缘材料的电阻影响较大，一般随温度升高而降低。'
+            },
+            {
+                id: 8,
+                type: 'mcq',
+                question: '电功的常用实用的单位有（   ）。',
+                options: ['焦耳', '伏安', '度', '瓦'],
+                answer: 'C',
+                explanation: '度是日常生活中计量电功的常用单位，1度=1千瓦时。'
+            },
+            {
+                id: 9,
+                type: 'mcq',
+                question: '把垂直穿过磁场中某一截面的磁力线条数叫作（   ）。',
+                options: [
+                    '磁通或磁通量',
+                    '磁感应强度',
+                    '磁导率',
+                    '磁场强度'
+                ],
+                answer: 'A',
+                explanation: '磁通量是指穿过某一截面的磁力线总数。'
+            },
+            {
+                id: 10,
+                type: 'mcq',
+                question: '铁磁性质在反复磁化过程中的B-H关系是（   ）。',
+                options: [
+                    '起始磁化曲线',
+                    '磁滞回线',
+                    '基本磁化曲线',
+                    '局部磁滞回线'
+                ],
+                answer: 'B',
+                explanation: '磁滞回线描述了铁磁材料在反复磁化过程中磁感应强度B与磁场强度H之间的关系。'
+            },
+            {
+                id: 11,
+                type: 'mcq',
+                question: '串联正弦交流电路的视在功率表征了该电路的（   ）。',
+                options: [
+                    '电路中总电压有效值与电流有效值的乘积',
+                    '平均功率',
+                    '瞬时功率最大值',
+                    '无功功率'
+                ],
+                answer: 'A',
+                explanation: '视在功率S=UI，是电压有效值与电流有效值的乘积。'
+            },
+            {
+                id: 12,
+                type: 'mcq',
+                question: '三相对称电路丫连接时，线电压比对应相电压（   ）。',
+                options: [
+                    '超前30°',
+                    '超前60°',
+                    '滞后30°',
+                    '滞后60°'
+                ],
+                answer: 'A',
+                explanation: '在星形连接的三相对称电路中，线电压超前对应相电压30°。'
+            },
+            {
+                id: 13,
+                type: 'mcq',
+                question: '变压器的基本作用是在交流电路中变电压、（   ）、变阻抗、变相位和电气隔离。',
+                options: ['变磁通', '变电流', '变功率', '变频率'],
+                answer: 'B',
+                explanation: '变压器可以实现电压、电流、阻抗、相位的变换以及电气隔离。'
+            },
+            {
+                id: 14,
+                type: 'mcq',
+                question: '变压器的器身主要由（   ）和绕组两部分所组成。',
+                options: ['定子', '转子', '磁通', '铁心'],
+                answer: 'D',
+                explanation: '变压器的器身主要由铁心和绕组组成，铁心构成磁路，绕组构成电路。'
+            },
+            {
+                id: 15,
+                type: 'mcq',
+                question: '三相异步电动机具有结构简单、工作可靠、重量轻、（   ）等优点。',
+                options: ['调速性能好', '价格低', '功率因数高', '交直流两用'],
+                answer: 'B',
+                explanation: '三相异步电动机的优点包括结构简单、工作可靠、重量轻、价格低等。'
+            },
+            {
+                id: 16,
+                type: 'mcq',
+                question: '三相异步电动机的转子由转子铁心、（   ）、风扇、转轴等组成。',
+                options: ['电刷', '转子绕组', '端盖', '机座'],
+                answer: 'B',
+                explanation: '三相异步电动机的转子主要由转子铁心、转子绕组、风扇和转轴组成。'
+            },
+            {
+                id: 17,
+                type: 'mcq',
+                question: '三相异步电动机工作时，其电磁转矩是由旋转磁场与（   ）共同作用产生的。',
+                options: ['定子电流', '转子电流', '转子电压', '电源电压'],
+                answer: 'B',
+                explanation: '三相异步电动机的电磁转矩是由旋转磁场与转子电流相互作用产生的。'
+            },
+            {
+                id: 18,
+                type: 'mcq',
+                question: '热继电器的作用是（   ）。',
+                options: ['短路保护', '过载保护', '失压保护', '零压保护'],
+                answer: 'B',
+                explanation: '热继电器主要用于电动机的过载保护。'
+            },
+            {
+                id: 19,
+                type: 'mcq',
+                question: '面接触型二极管应用于（   ）。',
+                options: ['整流', '稳压', '开关', '光敏'],
+                answer: 'B',
+                explanation: '面接触型二极管结面积大，结电容大，适用于低频整流和稳压。'
+            },
+            {
+                id: 20,
+                type: 'mcq',
+                question: '当二极管外加电压时，反向电流很小，且不随（   ）变化。',
+                options: ['正向电流', '正向电压', '电压', '反向电压'],
+                answer: 'D',
+                explanation: '二极管反向截止时，反向电流很小，且在一定范围内不随反向电压变化。'
+            },
+            {
+                id: 21,
+                type: 'mcq',
+                question: '三极管的fα高于等于（   ）为高频管。',
+                options: ['1MHz', '2MHz', '3MHz', '4MHz'],
+                answer: 'C',
+                explanation: '三极管的fα（特征频率）高于等于3MHz时为高频管。'
+            },
+            {
+                id: 22,
+                type: 'mcq',
+                question: '磁导率μ的单位为（   ）。',
+                options: ['H/m', 'H·m', 'T/m', 'Wb·m'],
+                answer: 'A',
+                explanation: '磁导率μ的单位为亨/米（H/m）。'
+            },
+            {
+                id: 23,
+                type: 'mcq',
+                question: '处于截止状态的三极管，其工作状态为（   ）。',
+                options: [
+                    '射结正偏，集电结反偏',
+                    '射结反偏，集电结反偏',
+                    '射结正偏，集电结正偏',
+                    '射结反偏，集电结正偏'
+                ],
+                answer: 'B',
+                explanation: '三极管截止状态的条件是发射结反偏，集电结反偏。'
+            },
+            {
+                id: 24,
+                type: 'mcq',
+                question: '射极输出器的输出电阻小，说明该电路的（   ）。',
+                options: [
+                    '带负载能力强',
+                    '带负载能力差',
+                    '减轻前级或信号源负荷',
+                    '取信号能力强'
+                ],
+                answer: 'A',
+                explanation: '输出电阻小，说明电路带负载能力强，负载变化时输出电压变化小。'
+            },
+            {
+                id: 25,
+                type: 'mcq',
+                question: '单相桥式整流电路的变压器二次侧电压为20伏，每个整流二极管所承受的最大反向电压为（   ）。',
+                options: ['20V', '28.28V', '40V', '56.56V'],
+                answer: 'B',
+                explanation: '单相桥式整流电路中，二极管承受的最大反向电压为√2×U2≈28.28V。'
+            },
+            {
+                id: 26,
+                type: 'mcq',
+                question: '根据仪表取得读数的方法可分为（   ）。',
+                options: ['指针式', '数字式', '记录式', '以上都是'],
+                answer: 'D',
+                explanation: '仪表按读数方法可分为指针式、数字式和记录式等。'
+            },
+            {
+                id: 27,
+                type: 'mcq',
+                question: '钢丝钳（电工钳子）可以用来剪切（   ）。',
+                options: ['细导线', '玻璃管', '铜条', '水管'],
+                answer: 'A',
+                explanation: '钢丝钳适用于剪切细导线，不宜剪切硬物或管材。'
+            },
+            {
+                id: 28,
+                type: 'mcq',
+                question: '千分尺一般用于测量（   ）的尺寸。',
+                options: ['小器件', '大器件', '建筑物', '电动机'],
+                answer: 'A',
+                explanation: '千分尺是精密测量工具，适用于测量小器件的精确尺寸。'
+            },
+            {
+                id: 29,
+                type: 'mcq',
+                question: '软磁材料的主要分类有铁氧体软磁材料、（   ）、其它软磁材料。',
+                options: ['不锈钢', '铜合金', '铝合金', '金属软磁材料'],
+                answer: 'D',
+                explanation: '软磁材料主要分为铁氧体软磁材料和金属软磁材料两大类。'
+            },
+            {
+                id: 30,
+                type: 'mcq',
+                question: '非本安防爆型电路及其外部配线用的电缆或绝缘导线的耐压强度最低为（   ）。',
+                options: ['1000V', '1500V', '3000V', '500V'],
+                answer: 'B',
+                explanation: '非本安防爆型电路的电缆或绝缘导线耐压强度最低为1500V。'
+            },
+            {
+                id: 31,
+                type: 'mcq',
+                question: '防雷装置包括（   ）。',
+                options: [
+                    '接闪器、引下线、接地装置',
+                    '避雷针、引下线、接地装置',
+                    '接闪器、接地线、接地装置',
+                    '接闪器、引下线、接零装置'
+                ],
+                answer: 'A',
+                explanation: '完整的防雷装置由接闪器、引下线和接地装置三部分组成。'
+            },
+            {
+                id: 32,
+                type: 'mcq',
+                question: '电缆或电线的驳口或破损处要用（   ）包好，不能用透明胶布代替。',
+                options: ['牛皮纸', '尼龙纸', '电工胶布', '医用胶布'],
+                answer: 'C',
+                explanation: '电缆或电线的驳口或破损处必须用绝缘性能良好的电工胶布包好。'
+            },
+            {
+                id: 33,
+                type: 'mcq',
+                question: '任何单位和个人不得危害发电设施、（   ）和电力线路设施及其有关辅助设施。',
+                options: ['变电设施', '用电设施', '保护设施', '建筑设施'],
+                answer: 'A',
+                explanation: '《电力法》规定，任何单位和个人不得危害发电设施、变电设施和电力线路设施。'
+            },
+            {
+                id: 34,
+                type: 'mcq',
+                question: '验电笔在使用时（   ）手接触笔尖金属探头。',
+                options: ['提倡用', '必须用', '不能用', '可以用'],
+                answer: 'C',
+                explanation: '使用验电笔时，手不能接触笔尖金属探头，以防触电。'
+            },
+            {
+                id: 35,
+                type: 'mcq',
+                question: '电压互感器的二次侧接（   ）。',
+                options: ['频率表', '电流表', '万用表', '电压表'],
+                answer: 'D',
+                explanation: '电压互感器用于测量高电压，二次侧接电压表。'
+            },
+            {
+                id: 36,
+                type: 'mcq',
+                question: '电能表的电流线圈（   ）在电路中。',
+                options: ['混联', '串联', '并联', '互联'],
+                answer: 'B',
+                explanation: '电能表的电流线圈串联在电路中，电压线圈并联在电路中。'
+            },
+            {
+                id: 37,
+                type: 'mcq',
+                question: '剥线钳的钳柄上套有额定工作电压500V的（   ）。',
+                options: ['木管', '铝管', '铜管', '绝缘套'],
+                answer: 'D',
+                explanation: '剥线钳的钳柄上套有绝缘套，以保证操作安全。'
+            },
+            {
+                id: 38,
+                type: 'mcq',
+                question: '拉出钢卷尺时，不要在地面上往返拖拽，防止尺面刻划（   ）。',
+                options: ['折断', '弯曲', '变形', '磨损'],
+                answer: 'D',
+                explanation: '钢卷尺在地面拖拽会导致尺面磨损，影响测量精度。'
+            },
+            {
+                id: 39,
+                type: 'mcq',
+                question: '钳形电流表与普通电流表相比，其测量误差（   ）。',
+                options: ['较大', '较小', '为零', '一样'],
+                answer: 'A',
+                explanation: '钳形电流表测量方便但精度较低，误差相对较大。'
+            },
+            {
+                id: 40,
+                type: 'mcq',
+                question: '钳形电流表在测量时，若铁心闭合不良，读数会（   ）。',
+                options: ['为零', '变大', '变小', '不变'],
+                answer: 'C',
+                explanation: '铁心闭合不良会导致磁通量减少，测量读数偏小。'
+            },
+            {
+                id: 41,
+                type: 'mcq',
+                question: '使用塞尺时，根据间隙大小，可用一片或（   ）在一起插入间隙内。',
+                options: ['数片重叠', '一片重叠', '两片重叠', '三片重叠'],
+                answer: 'A',
+                explanation: '塞尺可根据间隙大小，用一片或数片重叠在一起使用。'
+            },
+            {
+                id: 42,
+                type: 'mcq',
+                question: '选择功率表的量程就是选择功率表中的电流量程和（   ）量程。',
+                options: ['相位', '频率', '功率', '电压'],
+                answer: 'D',
+                explanation: '功率表的量程由电流量程和电压量程共同决定。'
+            },
+            {
+                id: 43,
+                type: 'mcq',
+                question: '当负载电阻远远小于功率表电流线圈的电阻时，应采用电压线圈（   ）。',
+                options: ['前接法', '后接法', '上接法', '下接法'],
+                answer: 'B',
+                explanation: '负载电阻较小时，功率表应采用电压线圈后接法，以减小测量误差。'
+            },
+            {
+                id: 44,
+                type: 'mcq',
+                question: '选择电能表的规格就是选择电能表的额定（   ）和额定电压。',
+                options: ['相位', '电流', '功率', '频率'],
+                answer: 'B',
+                explanation: '电能表的规格主要由额定电流和额定电压决定。'
+            },
+            {
+                id: 45,
+                type: 'mcq',
+                question: '负载的用电量要在电能表额定值的10％以上，否则会引起电能表（   ）。',
+                options: ['读数相反', '读数过大', '计量不准', '计量出错'],
+                answer: 'C',
+                explanation: '负载电流过小（低于额定值10%）会导致电能表计量不准确。'
+            },
+            {
+                id: 46,
+                type: 'mcq',
+                question: '铝导线一般用于（   ）。',
+                options: [
+                    '室外架空线',
+                    '室内照明线',
+                    '车间动力线',
+                    '电源插座线'
+                ],
+                answer: 'A',
+                explanation: '铝导线成本低、重量轻，适合用于室外架空线路。'
+            },
+            {
+                id: 47,
+                type: 'mcq',
+                question: '下面适合于制造电阻器的材料是（   ）。',
+                options: ['金', '银', '铝', '康铜'],
+                answer: 'D',
+                explanation: '康铜具有电阻温度系数小、稳定性好的特点，适合制造电阻器。'
+            },
+            {
+                id: 48,
+                type: 'mcq',
+                question: '220V线路中包扎电线接头时，应使用（   ）层黑胶布。',
+                options: ['1', '2', '3', '4'],
+                answer: 'B',
+                explanation: '220V线路接头包扎应使用2层黑胶布，以保证绝缘强度。'
+            },
+            {
+                id: 49,
+                type: 'mcq',
+                question: '刀开关必须（   ）安装，合闸时手柄朝上。',
+                options: ['水平', '垂直', '悬挂', '弹性'],
+                answer: 'B',
+                explanation: '刀开关必须垂直安装，以保证操作安全和正常工作。'
+            },
+            {
+                id: 50,
+                type: 'mcq',
+                question: '交流接触器的电磁机构主要由（   ）、铁心和衔铁所组成。',
+                options: ['指示灯', '手柄', '电阻', '线圈'],
+                answer: 'D',
+                explanation: '交流接触器的电磁机构由线圈、铁心和衔铁三部分组成。'
+            },
+            {
+                id: 51,
+                type: 'mcq',
+                question: '热继电器由热元件、触头系统、（   ）、复位机构和整定电流装置所组成。',
+                options: ['手柄', '线圈', '动作机构', '电磁铁'],
+                answer: 'C',
+                explanation: '热继电器由热元件、触头系统、动作机构、复位机构和整定电流装置组成。'
+            },
+            {
+                id: 52,
+                type: 'mcq',
+                question: '控制按钮在结构上有（   ）、紧急式、钥匙式、旋钮式、带灯式等。',
+                options: ['揿钮式', '电磁式', '电动式', '磁动式'],
+                answer: 'A',
+                explanation: '控制按钮按结构分为揿钮式、紧急式、钥匙式、旋钮式、带灯式等。'
+            },
+            {
+                id: 53,
+                type: 'mcq',
+                question: '（   ）进线应该接在刀开关上面的进线座上。',
+                options: ['电源', '负载', '电阻', '电感'],
+                answer: 'A',
+                explanation: '刀开关的电源进线应接在上面的进线座，负载接在下面的出线座。'
+            },
+            {
+                id: 54,
+                type: 'mcq',
+                question: '（   ）进线应该接在低压断路器的上端。',
+                options: ['电源', '负载', '电阻', '电感'],
+                answer: 'A',
+                explanation: '低压断路器的电源进线应接在上端，负载接在下端。'
+            },
+            {
+                id: 55,
+                type: 'mcq',
+                question: '安装螺旋式熔断器时，电源线必须接到瓷底座的（   ）接线端。',
+                options: ['左', '右', '上', '下'],
+                answer: 'D',
+                explanation: '螺旋式熔断器安装时，电源线接在瓷底座的下接线端，负载接在上接线端。'
+            },
+            {
+                id: 56,
+                type: 'mcq',
+                question: '接触器安装与接线时应将螺钉拧紧，以防振动（   ）。',
+                options: ['短路', '动作', '断裂', '松脱'],
+                answer: 'D',
+                explanation: '接触器安装时螺钉必须拧紧，防止振动导致接线松脱。'
+            },
+            {
+                id: 57,
+                type: 'mcq',
+                question: '用按钮控制设备的多种工作状态时，相同工作状态的按钮安装在（   ）。',
+                options: ['最远组', '最近组', '同一组', '不同组'],
+                answer: 'C',
+                explanation: '相同工作状态的按钮应安装在同一组，便于操作和识别。'
+            },
+            {
+                id: 58,
+                type: 'mcq',
+                question: '为铜导线提供电气连接的组合型接线端子排相邻两片的朝向必须（   ）。',
+                options: ['一致', '相反', '相对', '相背'],
+                answer: 'A',
+                explanation: '组合型接线端子排相邻两片的朝向必须一致，便于接线和维护。'
+            },
+            {
+                id: 59,
+                type: 'mcq',
+                question: '漏电保护器（   ），应操作试验按钮，检验其工作性能。',
+                options: ['购买后', '购买前', '安装后', '安装前'],
+                answer: 'C',
+                explanation: '漏电保护器安装后必须测试其工作性能，确保安全可靠。'
+            },
+            {
+                id: 60,
+                type: 'mcq',
+                question: '线路明管敷设时，管子的曲率半径R（   ）4d。',
+                options: ['小于', '大于', '大于等于', '等于'],
+                answer: 'C',
+                explanation: '明管敷设时，管子的曲率半径应大于等于4倍管径（R≥4d）。'
+            },
+            {
+                id: 61,
+                type: 'mcq',
+                question: 'PVC线槽要安装牢固，保证横平竖直；固定支点间距一般不应大于（   ）。',
+                options: ['4.0-4.5m', '3.0-3.5m', '2.0-2.5m', '1.0-1.5m'],
+                answer: 'D',
+                explanation: 'PVC线槽的固定支点间距一般不应大于1.0-1.5m。'
+            },
+            {
+                id: 62,
+                type: 'mcq',
+                question: '管线配线时，导线绝缘层的绝缘强度不能低于500V，铜芯线导线安全载流量为（   ）。',
+                options: ['4~6.5 A/mm', '5~8 A/mm', '3~5 A/mm', '1~3 A/mm'],
+                answer: 'A',
+                explanation: '铜芯线的安全载流量一般为4~6.5 A/mm²。'
+            },
+            {
+                id: 63,
+                type: 'mcq',
+                question: '管线配线时，铝芯线导线越粗，单位面积的安全载流量（   ）。',
+                options: ['越大', '越小', '不变', '常数'],
+                answer: 'B',
+                explanation: '导线越粗，集肤效应越明显，单位面积的安全载流量越小。'
+            },
+            {
+                id: 64,
+                type: 'mcq',
+                question: '照明灯具使用时要根据、安装方式、（   ）和功率等参数合理选择型号。',
+                options: ['灯泡颜色', '灯泡电流', '灯泡形状', '灯泡电压'],
+                answer: 'D',
+                explanation: '选择照明灯具时应考虑安装方式、灯泡电压和功率等参数。'
+            },
+            {
+                id: 65,
+                type: 'mcq',
+                question: '灯管必须保持水平的电光源是（   ）。',
+                options: ['白炽灯', '节能灯', '碘钨灯', '高压钠灯'],
+                answer: 'C',
+                explanation: '碘钨灯的灯管必须保持水平安装，否则会影响使用寿命。'
+            },
+            {
+                id: 66,
+                type: 'mcq',
+                question: '导线剖削时，无论采用何种工具和剥削方法，一定不能损伤导线的（   ）。',
+                options: ['绝缘', '线芯', '接头', '长度'],
+                answer: 'B',
+                explanation: '导线剖削时不得损伤线芯，以免影响导电性能和机械强度。'
+            },
+            {
+                id: 67,
+                type: 'mcq',
+                question: '单股粗铜线连接时，可以采用（   ）的方法。',
+                options: ['互钩', '打结', '绑扎', '熔化'],
+                answer: 'C',
+                explanation: '单股粗铜线连接可采用绑扎法，保证连接牢固。'
+            },
+            {
+                id: 68,
+                type: 'mcq',
+                question: '进行多股铜导线的连接时，将散开的各导线隔根对插，再把张开的各线端合拢，取任意两股同时绕（   ）圈后，采用同样的方法调换两股再卷绕，依次类推绕完为止。',
+                options: ['2-5', '3-5', '4-5', '5-6'],
+                answer: 'D',
+                explanation: '多股铜导线连接时，每股应绕5-6圈，确保连接牢固。'
+            },
+            {
+                id: 69,
+                type: 'mcq',
+                question: '导线在接线盒内的接线柱中连接时（   ）绝缘。',
+                options: ['需要外加', '不需外加', '用黑胶布', '用透明胶带'],
+                answer: 'B',
+                explanation: '导线在接线盒内的接线柱中连接时，利用接线柱本身的绝缘，不需外加绝缘。'
+            },
+            {
+                id: 70,
+                type: 'mcq',
+                question: '接地保护的原理是（   ）漏电设备的对地电压。',
+                options: ['提高', '增加', '消除', '限制'],
+                answer: 'D',
+                explanation: '接地保护通过将漏电电流引入大地，限制漏电设备的对地电压。'
+            },
+            {
+                id: 71,
+                type: 'mcq',
+                question: '接零保护适合于电源变压器二次侧（   ）接地的场合。',
+                options: ['中性点', '相线', '零线', '外壳'],
+                answer: 'A',
+                explanation: '接零保护适用于电源变压器二次侧中性点接地的三相四线制系统。'
+            },
+            {
+                id: 72,
+                type: 'mcq',
+                question: '在三相接零保护系统中，保护零线和工作零线不得装设（   ）或断路器。',
+                options: ['变压器', '互感器', '熔断器', '继电器'],
+                answer: 'C',
+                explanation: '保护零线和工作零线不得装设熔断器，防止零线断开导致安全隐患。'
+            },
+            {
+                id: 73,
+                type: 'mcq',
+                question: '保护接地与保护接零的适用范围（   ）。',
+                options: ['相同', '类似', '一样', '不同'],
+                answer: 'D',
+                explanation: '保护接地适用于不接地电网，保护接零适用于中性点接地电网，适用范围不同。'
+            },
+            {
+                id: 74,
+                type: 'mcq',
+                question: '照明电路由电度表、总开关、熔断器、（   ）、灯泡和导线等组成。',
+                options: ['开关', '插座', '电动机', '接触器'],
+                answer: 'A',
+                explanation: '照明电路的基本组成包括电度表、总开关、熔断器、开关、灯泡和导线等。'
+            },
+            {
+                id: 75,
+                type: 'mcq',
+                question: '照明电路中，一般用（   ）在两处控制一只灯。',
+                options: ['手动开关', '闸刀开关', '单联开关', '双联开关'],
+                answer: 'D',
+                explanation: '双联开关可实现两地控制一盏灯，广泛应用于楼梯等场所。'
+            },
+            {
+                id: 76,
+                type: 'mcq',
+                question: '动力主电路由电源开关、（   ）、接触器主触头、热继电器、电动机等组成。',
+                options: ['按钮', '熔断器', '时间继电器', '速度继电器'],
+                answer: 'B',
+                explanation: '动力主电路包括电源开关、熔断器、接触器主触头、热继电器和电动机等。'
+            },
+            {
+                id: 77,
+                type: 'mcq',
+                question: '动力主电路的通电测试顺序应该是（   ）。',
+                options: [
+                    '先不接电动机测试接触器的动作情况，再接电动机测试',
+                    '先测试电动机的动作情况，再测试接触器的动作情况',
+                    '先测试热继电器的动作情况，再测试接触器的动作情况',
+                    '先测试按钮的动作情况，再接电动机测试'
+                ],
+                answer: 'A',
+                explanation: '动力主电路通电测试应先不带负载测试控制部分，正常后再带负载测试。'
+            },
+            {
+                id: 78,
+                type: 'mcq',
+                question: '动力控制电路由熔断器、热继电器、按钮、行程开关、（   ）等组成。',
+                options: ['接触器主触头', '汇流排', '接触器线圈', '电动机'],
+                answer: 'C',
+                explanation: '动力控制电路包括熔断器、热继电器、按钮、行程开关和接触器线圈等。'
+            },
+            {
+                id: 79,
+                type: 'mcq',
+                question: '动力控制电路通电测试的最终目的是（   ）。',
+                options: [
+                    '观察各按钮的工作情况是否符合控制要求',
+                    '观察各接触器的动作情况是否符合控制要求',
+                    '观察各熔断器的工作情况是否符合控制要求',
+                    '观察各断路器的工作情况是否符合控制要求'
+                ],
+                answer: 'B',
+                explanation: '控制电路通电测试的最终目的是验证接触器动作是否符合控制要求。'
+            },
+            {
+                id: 80,
+                type: 'mcq',
+                question: '室内塑料护套线配线时，在距开关、插座和灯头（   ）处需设置线卡的固定点。',
+                options: ['20～50mm', '50～100mm', '150～200mm', '250～300mm'],
+                answer: 'B',
+                explanation: '塑料护套线配线时，开关、插座和灯头附近50～100mm处需设置固定点。'
+            },
+            {
+                id: 81,
+                type: 'mcq',
+                question: '下列哪种材料不是磁性材料（ ）。',
+                options: ['铁', '铜', '钴', '镍'],
+                answer: 'B',
+                explanation: '铜不是磁性材料，铁、钴、镍是常见的磁性材料。'
+            },
+            {
+                id: 82,
+                type: 'mcq',
+                question: '电压表使用时要与被测电路( )',
+                options: ['串联', '并联', '混联', '短路'],
+                answer: 'B',
+                explanation: '电压表测量电压时必须与被测电路并联。'
+            },
+            {
+                id: 83,
+                type: 'mcq',
+                question: '触电事故一旦发生，首先要（）。',
+                options: [
+                    '就地施救',
+                    '使触电者迅速脱离电源',
+                    '人工呼吸',
+                    '对症救护'
+                ],
+                answer: 'B',
+                explanation: '触电事故发生后，首先要使触电者迅速脱离电源，这是救治的首要步骤。'
+            },
+            {
+                id: 84,
+                type: 'mcq',
+                question: '下列关于电容器的说法正确的是（ ）。',
+                options: [
+                    '电容器的电容与极板间的距离成正比',
+                    '电容器充电后，两极板带同种电荷',
+                    '电容器的电容越大，储存的电荷量一定越多',
+                    '电容器的电容与电容器是否带电无关'
+                ],
+                answer: 'D',
+                explanation: '电容器的电容是其固有属性，与是否带电无关，取决于极板面积、间距和介质。'
+            },
+            {
+                id: 85,
+                type: 'mcq',
+                question: '下列关于电感的说法错误的是（ ）。',
+                options: [
+                    '电感对直流电流有阻碍作用',
+                    '电感的自感系数与线圈匝数有关',
+                    '电感在交流电路中会产生自感电动势',
+                    '电感对高频电流的阻碍作用比低频电流大'
+                ],
+                answer: 'A',
+                explanation: '电感对直流电流没有阻碍作用（感抗为零），对交流电流有阻碍作用。'
+            },
+            {
+                id: 86,
+                type: 'mcq',
+                question: '三相异步电动机的同步转速与（ ）有关。',
+                options: [
+                    '电源频率和磁极对数',
+                    '电源电压和磁极对数',
+                    '电源频率和转差率',
+                    '电源电压和转差率'
+                ],
+                answer: 'A',
+                explanation: '三相异步电动机的同步转速n₀=60f/p，与电源频率f和磁极对数p有关。'
+            },
+            {
+                id: 87,
+                type: 'mcq',
+                question: '下列哪种电器元件可用于实现电机的正反转控制（ ）。',
+                options: ['时间继电器', '速度继电器', '中间继电器', '接触器'],
+                answer: 'D',
+                explanation: '接触器可通过改变电机相序实现正反转控制。'
+            },
+            {
+                id: 88,
+                type: 'mcq',
+                question: '下列哪种测量工具不能用于测量电阻（ ）。',
+                options: ['万用表', '兆欧表', '电桥', '钳形电流表'],
+                answer: 'D',
+                explanation: '钳形电流表主要用于测量电流，不能直接测量电阻。'
+            },
+            {
+                id: 89,
+                type: 'mcq',
+                question: '下列关于接地电阻的说法正确的是（ ）。',
+                options: [
+                    '接地电阻越小越好',
+                    '接地电阻越大越好',
+                    '接地电阻大小不影响电气设备安全',
+                    '接地电阻与土壤电阻率无关'
+                ],
+                answer: 'A',
+                explanation: '接地电阻越小，接地效果越好，有利于安全。'
+            },
+            {
+                id: 90,
+                type: 'mcq',
+                question: '下列哪种电线电缆适用于高压输电（ ）。',
+                options: [
+                    '塑料绝缘电线',
+                    '橡皮绝缘电线',
+                    '交联聚乙烯绝缘电缆',
+                    '聚氯乙烯绝缘电缆'
+                ],
+                answer: 'C',
+                explanation: '交联聚乙烯绝缘电缆具有优良的电气性能，适用于高压输电。'
+            },
+            {
+                id: 91,
+                type: 'mcq',
+                question: '下列关于熔断器的说法错误的是（ ）。',
+                options: [
+                    '熔断器应串联在电路中',
+                    '熔断器的熔体额定电流应大于电路的正常工作电流',
+                    '熔断器可用于过载保护',
+                    '熔断器在短路时能迅速切断电路'
+                ],
+                answer: 'C',
+                explanation: '熔断器主要用于短路保护，不能可靠地用于过载保护。'
+            },
+            {
+                id: 92,
+                type: 'mcq',
+                question: '下列哪种电机不属于交流电机（ ）。',
+                options: [
+                    '同步电机',
+                    '直流电机',
+                    '三相异步电机',
+                    '单相异步电机'
+                ],
+                answer: 'B',
+                explanation: '直流电机使用直流电源，不属于交流电机。'
+            },
+            {
+                id: 93,
+                type: 'mcq',
+                question: '变压器油的颜色应该是（）',
+                options: ['暗红', '透明微黄', '棕色'],
+                answer: 'B',
+                explanation: '新变压器油通常是透明微黄色，老化后会变色。'
+            },
+            {
+                id: 94,
+                type: 'mcq',
+                question: '下列关于变压器油的作用，说法错误的是（ ）。',
+                options: ['绝缘', '散热', '灭弧', '润滑'],
+                answer: 'D',
+                explanation: '变压器油的作用是绝缘、散热和灭弧，没有润滑作用。'
+            },
+            {
+                id: 95,
+                type: 'mcq',
+                question: '下列哪种控制方式不属于电机调速方式（ ）。',
+                options: [
+                    '变极调速',
+                    '变频调速',
+                    '变电压调速',
+                    '变功率调速'
+                ],
+                answer: 'D',
+                explanation: '常用的电机调速方式包括变极、变频和变电压调速，没有变功率调速。'
+            },
+            {
+                id: 96,
+                type: 'mcq',
+                question: '下列关于互感器的说法，正确的是（ ）。',
+                options: [
+                    '电流互感器二次侧可以开路',
+                    '电压互感器二次侧可以短路',
+                    '电流互感器用于测量大电流',
+                    '电压互感器用于测量大电压'
+                ],
+                answer: 'C',
+                explanation: '电流互感器通过变流作用测量大电流，二次侧严禁开路。'
+            },
+            {
+                id: 97,
+                type: 'mcq',
+                question: '下列哪种工具常用于切割金属导线（ ）。',
+                options: ['尖嘴钳', '斜口钳', '剥线钳', '钢丝钳'],
+                answer: 'B',
+                explanation: '斜口钳主要用于切割金属导线和细金属丝。'
+            },
+            {
+                id: 98,
+                type: 'mcq',
+                question: '下列关于电机绝缘电阻的说法，错误的是（ ）。',
+                options: [
+                    '绝缘电阻应定期测量',
+                    '绝缘电阻过低可能导致电机漏电',
+                    '绝缘电阻与电机温度无关',
+                    '测量绝缘电阻可使用兆欧表'
+                ],
+                answer: 'C',
+                explanation: '电机绝缘电阻受温度影响较大，温度升高，绝缘电阻降低。'
+            },
+            {
+                id: 99,
+                type: 'mcq',
+                question: '下列哪种照明灯具发光效率最高（ ）。',
+                options: ['白炽灯', '荧光灯', '节能灯', 'LED 灯'],
+                answer: 'D',
+                explanation: 'LED灯的发光效率最高，能耗最低。'
+            },
+            {
+                id: 100,
+                type: 'mcq',
+                question: '下列关于电气安全距离的说法，正确的是（ ）。',
+                options: [
+                    '安全距离越大越好',
+                    '安全距离与电压等级无关',
+                    '安全距离是为了防止触电和电气短路',
+                    '安全距离只针对高压设备'
+                ],
+                answer: 'C',
+                explanation: '电气安全距离是为了防止触电、短路和电弧灼伤等事故。'
+            },
+            {
+                id: 101,
+                type: 'mcq',
+                question: '下列哪种材料常用于制作电机的绕组（ ）。',
+                options: ['铝', '铜', '铁', '银'],
+                answer: 'B',
+                explanation: '铜具有优良的导电性和机械性能，是电机绕组的主要材料。'
+            },
+            {
+                id: 102,
+                type: 'mcq',
+                question: '下列关于电力系统功率因数的说法，错误的是（ ）。',
+                options: [
+                    '功率因数越高，电能利用率越高',
+                    '提高功率因数可降低线路损耗',
+                    '感性负载会使功率因数降低',
+                    '容性负载会使功率因数降低'
+                ],
+                answer: 'D',
+                explanation: '容性负载会使功率因数提高，甚至超前。'
+            },
+            {
+                id: 103,
+                type: 'mcq',
+                question: '下列哪种电器元件可用于实现电机的降压起动（ ）。',
+                options: ['热继电器', '熔断器', '自耦变压器', '时间继电器'],
+                answer: 'C',
+                explanation: '自耦变压器可用于电机的降压起动，降低起动电流。'
+            },
+            {
+                id: 104,
+                type: 'mcq',
+                question: '下列关于交流电路中阻抗的说法，正确的是（ ）。',
+                options: [
+                    '阻抗等于电阻',
+                    '阻抗与频率无关',
+                    '阻抗包括电阻和电抗',
+                    '电抗只有感抗'
+                ],
+                answer: 'C',
+                explanation: '交流电路中的阻抗Z=R+jX，包括电阻R和电抗X（感抗和容抗）。'
+            },
+            {
+                id: 105,
+                type: 'mcq',
+                question: '下列哪种测量工具可用于测量电机的转速（ ）。',
+                options: ['万用表', '转速表', '钳形电流表', '兆欧表'],
+                answer: 'B',
+                explanation: '转速表是专门用于测量电机等旋转机械转速的工具。'
+            },
+            {
+                id: 106,
+                type: 'mcq',
+                question: '电动机的启动电流通常为额定电流的（ ）。',
+                options: ['1~2 倍', '3~5 倍', '4~7 倍', '8~10 倍'],
+                answer: 'C',
+                explanation: '电动机的启动电流通常为额定电流的4~7倍。'
+            },
+            {
+                id: 107,
+                type: 'mcq',
+                question: '下列关于电机绕组短路故障的说法，错误的是（ ）。',
+                options: [
+                    '短路会导致电机电流增大',
+                    '短路会使电机温度升高',
+                    '短路一定是因为绝缘损坏',
+                    '短路可能会烧毁电机'
+                ],
+                answer: 'C',
+                explanation: '绕组短路可能由多种原因引起，不一定是绝缘损坏。'
+            },
+            {
+                id: 108,
+                type: 'mcq',
+                question: '下列哪种电线电缆具有较好的抗干扰性能（ ）。',
+                options: [
+                    '普通电线',
+                    '屏蔽电缆',
+                    '电力电缆',
+                    '控制电缆'
+                ],
+                answer: 'B',
+                explanation: '屏蔽电缆具有金属屏蔽层，抗干扰性能较好。'
+            },
+            {
+                id: 109,
+                type: 'mcq',
+                question: '下列关于熔断器熔体的说法，正确的是（ ）。',
+                options: [
+                    '熔体的熔点越高越好',
+                    '熔体的材料通常是铅锡合金',
+                    '熔体的额定电流越大，熔断越快',
+                    '熔体不能重复使用'
+                ],
+                answer: 'B',
+                explanation: '熔断器熔体常用铅锡合金制成，具有较低的熔点。'
+            },
+            {
+                id: 110,
+                type: 'mcq',
+                question: '下列哪种电机的调速性能最好（ ）。',
+                options: [
+                    '三相异步电机',
+                    '单相异步电机',
+                    '直流电机',
+                    '同步电机'
+                ],
+                answer: 'C',
+                explanation: '直流电机具有优良的调速性能，调速范围宽，精度高。'
+            },
+            {
+                id: 111,
+                type: 'mcq',
+                question: '下列关于变压器变比的说法，错误的是（ ）。',
+                options: [
+                    '变比等于一次侧电压与二次侧电压之比',
+                    '变比与匝数比有关',
+                    '变比越大，升压或降压效果越明显',
+                    '变比可以随意改变'
+                ],
+                answer: 'D',
+                explanation: '变压器的变比由一次侧和二次侧的匝数比决定，不能随意改变。'
+            },
+            {
+                id: 112,
+                type: 'mcq',
+                question: '下列哪种控制方式可实现电机的无级调速（ ）。',
+                options: [
+                    '变极调速',
+                    '变频调速',
+                    '转子串电阻调速',
+                    '改变转差率调速'
+                ],
+                answer: 'B',
+                explanation: '变频调速可实现电机的平滑无级调速。'
+            },
+            {
+                id: 113,
+                type: 'mcq',
+                question: '下列关于电流互感器二次侧接地的说法，正确的是（ ）。',
+                options: [
+                    '二次侧不接地也可以正常工作',
+                    '接地是为了防止二次侧开路',
+                    '接地是为了保证人身和设备安全',
+                    '接地会影响测量精度'
+                ],
+                answer: 'C',
+                explanation: '电流互感器二次侧接地是为了防止一次侧高压窜入二次侧，保证安全。'
+            },
+            {
+                id: 114,
+                type: 'mcq',
+                question: '下列哪种工具可用于检测电气设备的绝缘性能（ ）。',
+                options: ['电笔', '示波器', '兆欧表', '万用表'],
+                answer: 'C',
+                explanation: '兆欧表（摇表）专门用于测量电气设备的绝缘电阻。'
+            },
+            {
+                id: 115,
+                type: 'mcq',
+                question: '下列关于电机过载保护的说法，错误的是（ ）。',
+                options: [
+                    '热继电器可用于过载保护',
+                    '过载保护能防止电机因过热而损坏',
+                    '过载保护与短路保护原理相同',
+                    '过载时电机电流会超过额定值'
+                ],
+                answer: 'C',
+                explanation: '过载保护和短路保护的原理不同，保护特性也不同。'
+            },
+            {
+                id: 116,
+                type: 'mcq',
+                question: '下列哪种照明灯具的显色指数最高（ ）。',
+                options: [
+                    '高压钠灯',
+                    '金属卤化物灯',
+                    '荧光灯',
+                    '白炽灯'                
+	],
+                answer: 'D',
+                explanation: '白炽灯的显色指数最高，接近100，最接近自然光。'
+            },
+            {
+                id: 117,
+                type: 'mcq',
+                question: '下列关于电气设备接地的说法，正确的是（ ）。',
+                options: [
+                    '所有电气设备都必须接地',
+                    '接地可分为工作接地和保护接地',
+                    '接地电阻没有具体要求',
+                    '接地导线可以使用铝线'
+                ],
+                answer: 'B',
+                explanation: '接地可分为工作接地（如中性点接地）和保护接地（如设备外壳接地）。'
+            },
+            {
+                id: 118,
+                type: 'mcq',
+                question: '下列哪种材料常用于制作变压器的铁心（ ）。',
+                options: ['硅钢片', '铜片', '铁片', '铝片'],
+                answer: 'A',
+                explanation: '硅钢片具有低磁滞损耗和低涡流损耗的特性，是变压器铁心的主要材料。'
+            },
+            {
+                id: 119,
+                type: 'mcq',
+                question: '下列关于电力系统无功功率的说法，错误的是（ ）。',
+                options: [
+                    '无功功率不消耗电能',
+                    '无功功率会影响电压质量',
+                    '感性负载需要消耗无功功率',
+                    '容性负载不需要无功功率'
+                ],
+                answer: 'D',
+                explanation: '容性负载可以提供无功功率，但在某些情况下也可能需要吸收无功功率。'
+            },
+            {
+                id: 120,
+                type: 'mcq',
+                question: '下列哪种电器元件可用于实现电机的制动（ ）。',
+                options: ['接触器', '速度继电器', '时间继电器', '中间继电器'],
+                answer: 'B',
+                explanation: '速度继电器可用于电机的反接制动控制，当电机转速接近零时切断电源。'
+            },
+            {
+                id: 121,
+                type: 'mcq',
+                question: '下列关于交流电路中相位的说法，正确的是（ ）。',
+                options: [
+                    '相位差为 0° 的两个正弦量同相',
+                    '相位与频率有关',
+                    '相位差与初相角无关',
+                    '相位只对电压有意义'
+                ],
+                answer: 'A',
+                explanation: '相位差为0°的两个正弦量称为同相，它们的变化规律完全一致。'
+            },
+            {
+                id: 122,
+                type: 'mcq',
+                question: '下列哪种测量工具可用于测量电路中的功率（ ）。',
+                options: ['万用表', '功率表', '钳形电流表', '兆欧表'],
+                answer: 'B',
+                explanation: '功率表是专门用于测量电路中有功功率、无功功率等参数的仪表。'
+            },
+            {
+                id: 123,
+                type: 'mcq',
+                question: '下列关于电机绕组断路故障的说法，错误的是（ ）。',
+                options: [
+                    '断路会使电机无法正常运转',
+                    '断路可能是由于导线断裂引起',
+                    '断路故障只能通过更换绕组解决',
+                    '断路时电机电流会减小'
+                ],
+                answer: 'C',
+                explanation: '轻微的绕组断路故障可通过焊接修复，不一定需要更换绕组。'
+            },
+            {
+                id: 124,
+                type: 'mcq',
+                question: '下列哪种电线电缆适用于室内布线（ ）。',
+                options: [
+                    '橡皮绝缘电缆',
+                    '塑料绝缘电线',
+                    '交联聚乙烯绝缘电缆',
+                    '矿物绝缘电缆'
+                ],
+                answer: 'B',
+                explanation: '塑料绝缘电线具有良好的绝缘性能和易操作性，适用于室内布线。'
+            },
+            {
+                id: 125,
+                type: 'mcq',
+                question: '下列关于熔断器选择的说法，正确的是（ ）。',
+                options: [
+                    '熔断器的额定电流应大于电路的最大短路电流',
+                    '熔断器的分断能力应大于电路的最大短路电流',
+                    '熔断器的熔体额定电流应等于电路的正常工作电流',
+                    '熔断器的类型与电路电压无关'
+                ],
+                answer: 'B',
+                explanation: '熔断器的分断能力必须大于电路可能出现的最大短路电流，以保证可靠分断故障电流。'
+            },
+            {
+                id: 126,
+                type: 'mcq',
+                question: '下列哪种电机常用于要求转速恒定的场合（ ）。',
+                options: [
+                    '三相异步电机',
+                    '单相异步电机',
+                    '直流电机',
+                    '同步电机'
+                ],
+                answer: 'D',
+                explanation: '同步电机的转速等于同步转速，不随负载变化而变化，适用于要求转速恒定的场合。'
+            },
+            {
+                id: 127,
+                type: 'mcq',
+                question: '下列关于变压器损耗的说法，错误的是（ ）。',
+                options: [
+                    '变压器的损耗包括铁损和铜损',
+                    '铁损与负载大小无关',
+                    '铜损随负载电流增大而增大',
+                    '降低变压器损耗不能提高效率'
+                ],
+                answer: 'D',
+                explanation: '降低变压器损耗（铁损和铜损）可以直接提高变压器的效率。'
+            },
+            {
+                id: 128,
+                type: 'mcq',
+                question: '下列哪种控制方式可实现电机的自动往返控制（ ）。',
+                options: [
+                    '按钮控制',
+                    '行程开关控制',
+                    '时间继电器控制',
+                    '接触器联锁控制'
+                ],
+                answer: 'B',
+                explanation: '行程开关可根据工作机械的位置实现电机的自动往返控制。'
+            },
+            {
+                id: 129,
+                type: 'mcq',
+                question: '下列关于电压互感器二次侧短路的说法，正确的是（ ）。',
+                options: [
+                    '二次侧短路不会影响互感器正常工作',
+                    '二次侧短路会使互感器烧毁',
+                    '二次侧短路可用于测量大电流',
+                    '二次侧短路是正常工作状态'
+                ],
+                answer: 'B',
+                explanation: '电压互感器二次侧短路会产生很大的短路电流，导致互感器烧毁。'
+            },
+            {
+                id: 130,
+                type: 'mcq',
+                question: '下列哪种工具可用于弯曲金属线管（ ）。',
+                options: ['弯管器', '钢丝钳', '尖嘴钳', '剥线钳'],
+                answer: 'A',
+                explanation: '弯管器是专门用于弯曲金属线管的工具，可保证弯曲质量和精度。'
+            },
+            {
+                id: 131,
+                type: 'mcq',
+                question: '变压器正常运行时的声音是（ ）',
+                options: [
+                    '时大时小的嗡嗡声',
+                    '连续均匀的嗡嗡声',
+                    '断断续续的嗡嗡声',
+                    '咔嚓声'
+                ],
+                answer: 'B',
+                explanation: '变压器正常运行时应发出连续均匀的嗡嗡声，这是由于铁心磁致伸缩引起的。'
+            },
+            {
+                id: 132,
+                type: 'mcq',
+                question: '下列关于电机绝缘等级的说法，错误的是（ ）。',
+                options: [
+                    '绝缘等级反映了电机绝缘材料的耐热性能',
+                    '绝缘等级越高，电机允许的工作温度越高',
+                    '不同绝缘等级的电机不能互换使用',
+                    '绝缘等级与电机的功率有关'
+                ],
+                answer: 'D',
+                explanation: '电机的绝缘等级与功率无关，主要与绝缘材料的耐热性能有关。'
+            },
+            {
+                id: 133,
+                type: 'mcq',
+                question: '下列哪种照明灯具的使用寿命最长（ ）。',
+                options: ['白炽灯', '荧光灯', '节能灯', 'LED 灯'],
+                answer: 'D',
+                explanation: 'LED灯的使用寿命最长，通常可达50000小时以上。'
+            },
+            {
+                id: 134,
+                type: 'mcq',
+                question: '下列关于电气火灾的说法，正确的是（ ）。',
+                options: [
+                    '电气火灾主要是由电气设备短路引起的',
+                    '发生电气火灾时，应立即用水灭火',
+                    '预防电气火灾应定期检查电气设备',
+                    '电气火灾不会造成人员伤亡'
+                ],
+                answer: 'C',
+                explanation: '定期检查电气设备是预防电气火灾的重要措施。'
+            },
+            {
+                id: 135,
+                type: 'mcq',
+                question: '下列哪种材料常用于制作电容器的极板（ ）。',
+                options: ['铝箔', '铜箔', '铁箔', '锡箔'],
+                answer: 'A',
+                explanation: '铝箔具有良好的导电性和延展性，且成本较低，常用于制作电容器极板。'
+            },
+            {
+                id: 136,
+                type: 'mcq',
+                question: '下列关于电力系统有功功率的说法，错误的是（ ）。',
+                options: [
+                    '有功功率是实际消耗的功率',
+                    '有功功率与无功功率相互独立',
+                    '提高有功功率可提高电能质量',
+                    '有功功率的单位是瓦特'
+                ],
+                answer: 'B',
+                explanation: '有功功率和无功功率是相互关联的，无功功率不足会影响有功功率的传输。'
+            },
+            {
+                id: 137,
+                type: 'mcq',
+                question: '下列哪种电器元件可用于实现电机的星-三角降压起动（ ）。',
+                options: ['热继电器', '时间继电器', '熔断器', '接触器'],
+                answer: 'D',
+                explanation: '星-三角降压起动需要通过接触器改变电机绕组的连接方式。'
+            },
+            {
+                id: 138,
+                type: 'mcq',
+                question: '下列关于交流电路中谐振的说法，正确的是（ ）。',
+                options: [
+                    '谐振时电路的阻抗最大',
+                    '谐振时电路的电流最小',
+                    '谐振分为串联谐振和并联谐振',
+                    '谐振与电源频率无关'
+                ],
+                answer: 'C',
+                explanation: '交流电路中的谐振分为串联谐振和并联谐振两种形式。'
+            },
+            {
+                id: 139,
+                type: 'mcq',
+                question: '下列哪种测量工具可用于测量电机的绝缘电阻（ ）。',
+                options: ['万用表', '兆欧表', '钳形电流表', '电桥'],
+                answer: 'B',
+                explanation: '兆欧表（摇表）是测量电机等电气设备绝缘电阻的专用工具。'
+            },
+            {
+                id: 140,
+                type: 'mcq',
+                question: '下列关于电机转子故障的说法，错误的是（ ）。',
+                options: [
+                    '转子断条会使电机转矩下降',
+                    '转子不平衡会引起电机振动',
+                    '转子故障不会影响电机的转速',
+                    '转子与定子摩擦会损坏电机'
+                ],
+                answer: 'C',
+                explanation: '转子故障会直接影响电机的转速和运行性能。'
+            },
+
+            // 二、判断题（140道）
+            {
+                id: 141,
+                type: 'tfq',
+                question: '对称三相电路丫连接时，线电压为相电压的√3倍。',
+                answer: '正确',
+                explanation: '在对称三相Y形连接中，线电压是相电压的√3倍，相位超前30°。'
+            },
+            {
+                id: 142,
+                type: 'tfq',
+                question: '串联电路中，总电阻等于各电阻的倒数之和。',
+                answer: '错误',
+                explanation: '串联电路中，总电阻等于各电阻之和；并联电路中，总电阻的倒数等于各电阻倒数之和。'
+            },
+            {
+                id: 143,
+                type: 'tfq',
+                question: '电容并联时，总电容容量数等于各电容倒数之和。',
+                answer: '错误',
+                explanation: '电容并联时，总电容等于各电容之和；电容串联时，总电容的倒数等于各电容倒数之和。'
+            },
+            {
+                id: 144,
+                type: 'tfq',
+                question: '正弦交流电压任一瞬间所具有的数值叫瞬时值。',
+                answer: '正确',
+                explanation: '瞬时值是指正弦交流电在某一时刻的数值。'
+            },
+            {
+                id: 145,
+                type: 'tfq',
+                question: '线圈匝数W与其中电流I的乘积，即WI称为磁动势。',
+                answer: '正确',
+                explanation: '磁动势的计算公式为F=WI，单位为安匝。'
+            },
+            {
+                id: 146,
+                type: 'tfq',
+                question: '线圈切割相邻线圈磁通所感应出来的电动势，称为互感电动势。',
+                answer: '正确',
+                explanation: '互感电动势是由相邻线圈的磁通变化在本线圈中产生的感应电动势。'
+            },
+            {
+                id: 147,
+                type: 'tfq',
+                question: '在PN结处发生多数载流子扩散运动，少数载流子漂移运动，结果形成了空间电荷区。',
+                answer: '正确',
+                explanation: 'PN结的形成是由于多数载流子的扩散和少数载流子的漂移达到动态平衡的结果。'
+            },
+            {
+                id: 148,
+                type: 'tfq',
+                question: '在现场工作过程中，遇到异常现象或断路器跳闸时，不论与本身工作是否有关，应立即停止工作，保持现状。',
+                answer: '正确',
+                explanation: '这是保证安全和便于故障分析的重要措施。'
+            },
+            {
+                id: 149,
+                type: 'tfq',
+                question: '岗位交接班记录不属于运行记录。',
+                answer: '正确',
+                explanation: '岗位交接班记录属于管理记录，不属于运行记录。'
+            },
+            {
+                id: 150,
+                type: 'tfq',
+                question: '填写记录要求及时、准确、客观真实、内容完整、字迹清晰。',
+                answer: '正确',
+                explanation: '这是填写记录的基本要求。'
+            },
+            {
+                id: 151,
+                type: 'tfq',
+                question: '从事化工作业人员必须佩带防护镜和防护面罩。',
+                answer: '错误',
+                explanation: '化工作业人员应根据具体作业情况佩戴适当的防护用品，并非必须佩带防护镜和防护面罩。'
+            },
+            {
+                id: 152,
+                type: 'tfq',
+                question: '女工在从事转动设备作业时必须将长发或发辫盘卷在工作帽内。',
+                answer: '正确',
+                explanation: '这是为了防止长发卷入设备，保证人身安全。'
+            },
+            {
+                id: 153,
+                type: 'tfq',
+                question: '防护罩、安全阀不属于安全防护装置。',
+                answer: '错误',
+                explanation: '防护罩和安全阀都属于重要的安全防护装置。'
+            },
+            {
+                id: 154,
+                type: 'tfq',
+                question: '直流电机运转时，将其电枢电源切断，同时接入电阻，此时电机转速很快下降，这种制动称为能耗制动。',
+                answer: '正确',
+                explanation: '能耗制动是将电机的动能转化为电能消耗在电阻上，实现制动。'
+            },
+            {
+                id: 155,
+                type: 'tfq',
+                question: '最简明的降压起动方法是星—三角起动。',
+                answer: '正确',
+                explanation: '星—三角起动是一种简单、经济的降压起动方法。'
+            },
+            {
+                id: 156,
+                type: 'tfq',
+                question: '变极调速可以平滑调速。',
+                answer: '错误',
+                explanation: '变极调速是有级调速，不能实现平滑调速。'
+            },
+            {
+                id: 157,
+                type: 'tfq',
+                question: '同步电机通过调节励磁电流可以改变功率因数。',
+                answer: '正确',
+                explanation: '同步电机可以通过调节励磁电流使其工作在超前或滞后的功率因数状态。'
+            },
+            {
+                id: 158,
+                type: 'tfq',
+                question: '在可控硅调试时，应使主回路和触发回路输出的脉冲相位异步，输出电压波形的三个波顶的变化应一致。',
+                answer: '错误',
+                explanation: '可控硅调试时，主回路和触发回路的脉冲相位应同步。'
+            },
+            {
+                id: 159,
+                type: 'tfq',
+                question: '电缆的预防性直流耐压试验持续时间应为1分钟。',
+                answer: '错误',
+                explanation: '电缆的预防性直流耐压试验持续时间通常为5分钟。'
+            },
+            {
+                id: 160,
+                type: 'tfq',
+                question: '电缆与热力管道交叉时，一般将电缆敷设在热力管道的上面。',
+                answer: '错误',
+                explanation: '电缆与热力管道交叉时，电缆应敷设在热力管道的下面，以避免过热。'
+            },
+            {
+                id: 161,
+                type: 'tfq',
+                question: '电流互感器在运行时，二次不允许开路且不用接地。',
+                answer: '错误',
+                explanation: '电流互感器运行时二次不允许开路，但必须接地以保证安全。'
+            },
+            {
+                id: 162,
+                type: 'tfq',
+                question: '电压互感器在运行时，二次接地是为了保护或设备安全。',
+                answer: '正确',
+                explanation: '电压互感器二次接地可防止一次侧高压窜入二次侧，保护人身和设备安全。'
+            },
+            {
+                id: 163,
+                type: 'tfq',
+                question: '接触器吸引线圈的额定电压应大于控制电路的工作电压。',
+                answer: '错误',
+                explanation: '接触器吸引线圈的额定电压应与控制电路的工作电压相符。'
+            },
+            {
+                id: 164,
+                type: 'tfq',
+                question: '在单台异步电动机直接起动的电路中，熔丝额定电流可取电机额定电流1.5—2.5倍。',
+                answer: '正确',
+                explanation: '这是单台异步电动机直接起动时熔丝额定电流的合理选择范围。'
+            },
+            {
+                id: 165,
+                type: 'tfq',
+                question: '交流接触器铁芯上装设短路环是为了消除由于交流电过零时电磁铁吸力为零所产生的振动的噪音。',
+                answer: '正确',
+                explanation: '短路环可使铁芯的磁通分相，消除振动和噪音。'
+            },
+            {
+                id: 166,
+                type: 'tfq',
+                question: '异步电动机S<0时为制动状态。',
+                answer: '错误',
+                explanation: '异步电动机S<0时为发电状态（回馈制动），并非制动状态的唯一判定。'
+            },
+            {
+                id: 167,
+                type: 'tfq',
+                question: '一个能正常开停三相电机控制电路中，当出现只能点动不能连续运转时，这是因为自保回路造成的后果。',
+                answer: '正确',
+                explanation: '这通常是由于自保回路故障（如常开辅助触头接触不良）导致的。'
+            },
+            {
+                id: 168,
+                type: 'tfq',
+                question: '提高直流电机的电压可以使电机的转速提高。',
+                answer: '正确',
+                explanation: '直流电机的转速与电枢电压成正比（n∝U）。'
+            },
+            {
+                id: 169,
+                type: 'tfq',
+                question: '最简单的降压起动方法是自耦补偿器起动。',
+                answer: '错误',
+                explanation: '最简单的降压起动方法是星—三角起动。'
+            },
+            {
+                id: 170,
+                type: 'tfq',
+                question: '电容器并联时电容量减少，并联时电容量增加。',
+                answer: '错误',
+                explanation: '电容器并联时电容量增加，串联时电容量减少。'
+            },
+            {
+                id: 171,
+                type: 'tfq',
+                question: '直流电机运行时，一小时其电机电源切断同时接入电阻，二小时电机转速低、下降，这种制动为反接制动。',
+                answer: '错误',
+                explanation: '这种制动方式称为能耗制动，反接制动需要改变电源相序。'
+            },
+            {
+                id: 172,
+                type: 'tfq',
+                question: '单相桥式整流电路需要两只二极管。',
+                answer: '错误',
+                explanation: '单相桥式整流电路需要四只二极管。'
+            },
+            {
+                id: 173,
+                type: 'tfq',
+                question: '在滤波电路中，可以通过交流隔断直流元件是电感。',
+                answer: '错误',
+                explanation: '电感可以通过直流、隔断交流；电容可以通过交流、隔断直流。'
+            },
+            {
+                id: 174,
+                type: 'tfq',
+                question: '三相鼠笼式异步电动机的起动电流（全压时）为额定电源的4—7倍。',
+                answer: '正确',
+                explanation: '三相鼠笼式异步电动机的起动电流通常为额定电流的4—7倍。'
+            },
+            {
+                id: 175,
+                type: 'tfq',
+                question: '三相感应电机的调速方法有变极、变频、改变转差率调速。',
+                answer: '正确',
+                explanation: '这是三相感应电机的三种基本调速方法。'
+            },
+            {
+                id: 176,
+                type: 'tfq',
+                question: '反接制动时，当转子转速降到零时，要迅速切断电源，否则将发生反向起动。',
+                answer: '正确',
+                explanation: '反接制动在转速接近零时必须切断电源，防止电机反向起动。'
+            },
+            {
+                id: 177,
+                type: 'tfq',
+                question: '变频调速是通过改变电源频率而改变定子磁场转速从而达到改变电机转速的。',
+                answer: '正确',
+                explanation: '变频调速的基本原理是通过改变电源频率改变同步转速，从而改变电机转速。'
+            },
+            {
+                id: 178,
+                type: 'tfq',
+                question: '变压器原边电压不变，要增加副边电压，应增加原边的匝数。',
+                answer: '错误',
+                explanation: '变压器原边电压不变时，增加副边匝数或减少原边匝数可提高副边电压。'
+            },
+            {
+                id: 179,
+                type: 'tfq',
+                question: '发现错合隔离开关时，可立即把刀闸拉开。',
+                answer: '错误',
+                explanation: '错合隔离开关时，严禁立即拉开，以防产生电弧造成事故。'
+            },
+            {
+                id: 180,
+                type: 'tfq',
+                question: '变压器额定容量是指在额定工作条件下，变压器额定电压与额定电流的乘积。',
+                answer: '正确',
+                explanation: '变压器的额定容量S=UₙIₙ，单位为伏安（VA）或千伏安（kVA）。'
+            },
+            {
+                id: 181,
+                type: 'tfq',
+                question: '电流互感器如果原边电流不变，而增大副边的负载阻抗会引起误差增大。',
+                answer: '正确',
+                explanation: '电流互感器的误差随副边负载阻抗的增大而增大。'
+            },
+            {
+                id: 182,
+                type: 'tfq',
+                question: '选用熔断器时，熔体的额定电流必须大于等于熔管的额定电流。',
+                answer: '错误',
+                explanation: '选用熔断器时，熔体的额定电流必须小于等于熔管的额定电流。'
+            },
+            {
+                id: 183,
+                type: 'tfq',
+                question: '防爆电动机的防爆标志KA可以在1区使用。',
+                answer: '错误',
+                explanation: '防爆标志KA的电动机不适合在1区危险环境中使用。'
+            },
+            {
+                id: 184,
+                type: 'tfq',
+                question: '三相四线制照明线路零线可以安装熔断器。',
+                answer: '错误',
+                explanation: '三相四线制照明线路的零线不允许安装熔断器，以防零线断开导致电压不平衡。'
+            },
+            {
+                id: 185,
+                type: 'tfq',
+                question: '电动机运行中，突然有一相电源断，电动机停运。',
+                answer: '错误',
+                explanation: '电动机运行中一相断电时，会成为单相运行，不会立即停运，但会过热烧毁。'
+            },
+            {
+                id: 186,
+                type: 'tfq',
+                question: '隔离开关不允许带负荷拉开的原因是没有绝缘油。',
+                answer: '错误',
+                explanation: '隔离开关不允许带负荷拉开的原因是没有灭弧装置，会产生电弧造成事故。'
+            },
+            {
+                id: 187,
+                type: 'tfq',
+                question: '用万用表测量转换量程时不可以带电拨动。',
+                answer: '正确',
+                explanation: '万用表转换量程时带电拨动可能会损坏仪表。'
+            },
+            {
+                id: 188,
+                type: 'tfq',
+                question: '在正弦交流电路中，周期与角频率是互为倒数的关系。',
+                answer: '错误',
+                explanation: '周期T与频率f互为倒数（T=1/f），角频率ω=2πf。'
+            },
+            {
+                id: 189,
+                type: 'tfq',
+                question: '接触器衔铁在吸合过程中，线圈中的电流恒定不变。',
+                answer: '错误',
+                explanation: '接触器衔铁在吸合过程中，磁阻变化，线圈电流会减小。'
+            },
+            {
+                id: 190,
+                type: 'tfq',
+                question: '变压器负荷很高，其运行效率越好。',
+                answer: '错误',
+                explanation: '变压器在额定负荷附近效率最高，负荷过高或过低效率都会下降。'
+            },
+            {
+                id: 191,
+                type: 'tfq',
+                question: '异步电动机转子绕组分为鼠笼式和绕线式两种。',
+                answer: '正确',
+                explanation: '异步电动机的转子绕组主要有鼠笼式和绕线式两种结构。'
+            },
+            {
+                id: 192,
+                type: 'tfq',
+                question: '电动机额定容量是指转子输出的机械功率。',
+                answer: '正确',
+                explanation: '电动机的额定容量是指在额定工作状态下输出的机械功率。'
+            },
+            {
+                id: 193,
+                type: 'tfq',
+                question: '刀开关的闸刀，额定电流100A—400A，采用双刀片600A—1500A，采用单刀片。',
+                answer: '错误',
+                explanation: '刀开关的闸刀，小额定电流采用单刀片，大额定电流采用双刀片。'
+            },
+            {
+                id: 194,
+                type: 'tfq',
+                question: '主变压器引线上所接的避雷器其作用主要是防止雷击造成的过电压。',
+                answer: '正确',
+                explanation: '变压器引线上的避雷器主要用于防止雷击过电压损坏变压器。'
+            },
+            {
+                id: 195,
+                type: 'tfq',
+                question: '通过某一面积上的磁通叫磁通密度。',
+                answer: '错误',
+                explanation: '通过单位面积的磁通叫磁通密度，通过某一面积的总磁通叫磁通量。'
+            },
+            {
+                id: 196,
+                type: 'tfq',
+                question: '异步电动机最大转矩是由电阻决定的，与电源电压无关。',
+                answer: '错误',
+                explanation: '异步电动机的最大转矩与电源电压的平方成正比。'
+            },
+            {
+                id: 197,
+                type: 'tfq',
+                question: '同步发电机的功率因数一般为0.8到0.85（滞后）。',
+                answer: '正确',
+                explanation: '同步发电机通常工作在功率因数0.8到0.85（滞后）的状态。'
+            },
+            {
+                id: 198,
+                type: 'tfq',
+                question: '同步发电机的空载特性反映了定子绕组中的电流和端电压之间的关系。',
+                answer: '错误',
+                explanation: '同步发电机的空载特性反映了励磁电流与端电压之间的关系。'
+            },
+            {
+                id: 199,
+                type: 'tfq',
+                question: '变压电动系仪表可以做成交直流两用准确度极高的电流表、电压表外，还可以做成功率表、频率表和相位表。',
+                answer: '正确',
+                explanation: '变压电动系仪表具有交直流两用、准确度高的特点，可测量多种电量。'
+            },
+            {
+                id: 200,
+                type: 'tfq',
+                question: '准确度为1.5级的仪表,其测量的基本误差为±3%。',
+                answer: '错误',
+                explanation: '准确度为1.5级的仪表，其基本误差为±1.5%。'
+            },
+            {
+                id: 201,
+                type: 'tfq',
+                question: '电压互感器二次绕组不允许开路，电流互感器二次绕组不允许短路。',
+                answer: '错误',
+                explanation: '电压互感器二次绕组不允许短路，电流互感器二次绕组不允许开路。'
+            },
+            {
+                id: 202,
+                type: 'tfq',
+                question: '使用万用表测量电阻，每换一次欧姆档，都要把指针调零一次。',
+                answer: '正确',
+                explanation: '万用表更换欧姆档后必须重新调零，以保证测量 accuracy。'
+            },
+            {
+                id: 203,
+                type: 'tfq',
+                question: '装设接地线时，应现装三相线，然后装接地端；拆时相反，现拆接地端，后拆三相线端。',
+                answer: '错误',
+                explanation: '装设接地线时，应先接接地端，后接三相线；拆除时相反。'
+            },
+            {
+                id: 204,
+                type: 'tfq',
+                question: '铝导线连接时，不能像铜导线那样用缠绕法或绞接法，只是因为铝导线机械强度差。',
+                answer: '错误',
+                explanation: '铝导线连接不用缠绕法或绞接法主要是因为铝易氧化，接头电阻大。'
+            },
+            {
+                id: 205,
+                type: 'tfq',
+                question: '裸导线在室内敷设高度为3.5米以上,低于3.5米不许架设。',
+                answer: '错误',
+                explanation: '裸导线在室内敷设的安全高度一般为2.5米以上。'
+            },
+            {
+                id: 206,
+                type: 'tfq',
+                question: '纸绝缘电缆的外护层的主要作用是防止潮气或渗水。',
+                answer: '错误',
+                explanation: '纸绝缘电缆的外护层主要起机械保护作用，防止潮气侵入是绝缘层的作用。'
+            },
+            {
+                id: 207,
+                type: 'tfq',
+                question: '高压隔离开关在运行中若发现绝缘子表面严重放电或绝缘子破裂，应立即将高压隔离开关分断，退出运行。',
+                answer: '错误',
+                explanation: '高压隔离开关出现绝缘子故障时，应先断开相关断路器，再分断隔离开关。'
+            },
+            {
+                id: 208,
+                type: 'tfq',
+                question: '高压隔离开关当动闸刀与静触头分断时，产生的电弧是压缩空气把电弧吹长而熄灭的。',
+                answer: '错误',
+                explanation: '高压隔离开关没有灭弧装置，不能熄灭电弧，不允许带负荷操作。'
+            },
+            {
+                id: 209,
+                type: 'tfq',
+                question: '高压负荷开关可以断开和开和电路负荷电流和短路电流。',
+                answer: '错误',
+                explanation: '高压负荷开关只能断开和接通负荷电流，不能断开短路电流。'
+            },
+            {
+                id: 210,
+                type: 'tfq',
+                question: '高压负荷开关可以断开和关合电路负荷电流，但不能开断回路的短路电流。',
+                answer: '正确',
+                explanation: '这是高压负荷开关的基本特性。'
+            },
+            {
+                id: 211,
+                type: 'tfq',
+                question: '高压负荷开关和熔断器组合使用时，由负荷开关负责接通或断开负荷电流，由高压熔断器负责过载和短路保护。',
+                answer: '正确',
+                explanation: '这是高压负荷开关与熔断器组合的典型应用方式。'
+            },
+            {
+                id: 212,
+                type: 'tfq',
+                question: '高压六氟化硫断路器的动作快，断口距离大，允许连续开断次数较多。',
+                answer: '错误',
+                explanation: '高压六氟化硫断路器动作快，断口距离小，允许连续开断次数较多。'
+            },
+            {
+                id: 213,
+                type: 'tfq',
+                question: '高压隔离开关由于没有灭弧装置，所以不允许带负荷进行拉合闸。',
+                answer: '正确',
+                explanation: '这是高压隔离开关的重要安全规定。'
+            },
+            {
+                id: 214,
+                type: 'tfq',
+                question: '高压熔断器属于电力系统中，用来控制电路通、断的一种设备。',
+                answer: '错误',
+                explanation: '高压熔断器主要用于短路保护，不是控制电路通断的设备。'
+            },
+            {
+                id: 215,
+                type: 'tfq',
+                question: '并联电容器是专门用于电力系统中补偿电压降的设备。',
+                answer: '错误',
+                explanation: '并联电容器主要用于补偿无功功率，提高功率因数。'
+            },
+            {
+                id: 216,
+                type: 'tfq',
+                question: '并联电容器在电力系统中的作用，是补偿电力系统中的容性负载，改善电压质量，降低线路损耗、提高功率因数。',
+                answer: '错误',
+                explanation: '并联电容器用于补偿感性负载，而非容性负载。'
+            },
+            {
+                id: 217,
+                type: 'tfq',
+                question: '高压断路器不仅能通、断正常的负荷的电流，而且能通、断一定的短路电流。',
+                answer: '正确',
+                explanation: '这是高压断路器的基本功能。'
+            },
+            {
+                id: 218,
+                type: 'tfq',
+                question: '高压断路器仅能通、断正常的负荷电流，而不能通、断短路电流。',
+                answer: '错误',
+                explanation: '高压断路器必须具备通断短路电流的能力。'
+            },
+            {
+                id: 219,
+                type: 'tfq',
+                question: '10kV电流互感器的计量级和保护（继电）级允许对换使用。',
+                answer: '错误',
+                explanation: '计量级和保护级电流互感器的特性不同，不允许对换使用。'
+            },
+            {
+                id: 220,
+                type: 'tfq',
+                question: '在纯电阻交流电路中，电压与电流的相位差为 90°。',
+                answer: '错误',
+                explanation: '在纯电阻交流电路中，电压与电流同相，相位差为0°。'
+            },
+            {
+                id: 221,
+                type: 'tfq',
+                question: '基尔霍夫电流定律不仅适用于电路中的节点，也适用于任意假设的封闭面。',
+                answer: '正确',
+                explanation: '这是基尔霍夫电流定律的推广应用，称为广义节点定律。'
+            },
+            {
+                id: 222,
+                type: 'tfq',
+                question: '叠加定理适用于所有电路，包括非线性电路。',
+                answer: '错误',
+                explanation: '叠加定理只适用于线性电路，不适用于非线性电路。'
+            },
+            {
+                id: 223,
+                type: 'tfq',
+                question: '戴维南定理可将复杂的有源二端网络等效为一个电压源和电阻的串联组合。',
+                answer: '正确',
+                explanation: '这是戴维南定理的基本内容。'
+            },
+            {
+                id: 224,
+                type: 'tfq',
+                question: '电容在直流稳态电路中相当于短路。',
+                answer: '错误',
+                explanation: '电容在直流稳态电路中相当于开路。'
+            },
+            {
+                id: 225,
+                type: 'tfq',
+                question: '电感在直流稳态电路中相当于短路。',
+                answer: '正确',
+                explanation: '电感在直流稳态电路中感抗为零，相当于短路。'
+            },
+            {
+                id: 226,
+                type: 'tfq',
+                question: '正弦交流电路中，有功功率就是瞬时功率的平均值。',
+                answer: '正确',
+                explanation: '有功功率的定义就是瞬时功率在一个周期内的平均值。'
+            },
+            {
+                id: 227,
+                type: 'tfq',
+                question: '无功功率表示的是电感或电容与电源之间能量交换的规模。',
+                answer: '正确',
+                explanation: '这是无功功率的物理意义。'
+            },
+            {
+                id: 228,
+                type: 'tfq',
+                question: '提高功率因数，必须在感性负载两端并联电容，且电容越大，功率因数提高得越多。',
+                answer: '错误',
+                explanation: '并联电容过大反而会使功率因数超前，并非越大越好。'
+            },
+            {
+                id: 229,
+                type: 'tfq',
+                question: '三相异步电动机的旋转方向取决于电源的相序。',
+                answer: '正确',
+                explanation: '改变电源相序可以改变三相异步电动机的旋转方向。'
+            },
+            {
+                id: 230,
+                type: 'tfq',
+                question: '三相异步电动机的额定转速与同步转速相等。',
+                answer: '错误',
+                explanation: '三相异步电动机的额定转速略低于同步转速，存在转差率。'
+            },
+            {
+                id: 231,
+                type: 'tfq',
+                question: '直流电动机的电磁转矩与电枢电流和磁通成正比。',
+                answer: '正确',
+                explanation: '直流电动机的电磁转矩T=KtΦIₐ，与电枢电流和磁通成正比。'
+            },
+            {
+                id: 232,
+                type: 'tfq',
+                question: '变压器的变比等于一次绕组匝数与二次绕组匝数之比的倒数。',
+                answer: '错误',
+                explanation: '变压器的变比等于一次绕组匝数与二次绕组匝数之比（K=N₁/N₂）。'
+            },
+            {
+                id: 233,
+                type: 'tfq',
+                question: '电压互感器在运行时，二次侧不允许短路。',
+                answer: '正确',
+                explanation: '电压互感器二次侧短路会产生很大的短路电流，烧毁互感器。'
+            },
+            {
+                id: 234,
+                type: 'tfq',
+                question: '电流互感器在运行时，二次侧不允许接地。',
+                answer: '错误',
+                explanation: '电流互感器运行时二次侧必须接地，以保证安全。'
+            },
+            {
+                id: 235,
+                type: 'tfq',
+                question: '交流接触器的自锁控制是通过接触器的常开辅助触头实现的。',
+                answer: '正确',
+                explanation: '这是交流接触器自锁控制的基本原理。'
+            },
+            {
+                id: 236,
+                type: 'tfq',
+                question: '热继电器的热元件应串联在主电路中，其常闭触头应串联在控制电路中。',
+                answer: '正确',
+                explanation: '这是热继电器的正确接线方式。'
+            },
+            {
+                id: 237,
+                type: 'tfq',
+                question: '熔断器的熔体额定电流越大，熔断时间越长。',
+                answer: '正确',
+                explanation: '熔断器具有反时限特性，熔体额定电流越大，熔断时间越长。'
+            },
+            {
+                id: 238,
+                type: 'tfq',
+                question: '漏电保护器只能对漏电故障进行保护，不能对过载和短路故障进行保护。',
+                answer: '错误',
+                explanation: '许多漏电保护器同时具有过载和短路保护功能。'
+            },
+            {
+                id: 239,
+                type: 'tfq',
+                question: '在照明电路中，开关应控制火线。',
+                answer: '正确',
+                explanation: '照明电路中开关控制火线可保证灯具断开后不带电，确保安全。'
+            },
+            {
+                id: 240,
+                type: 'tfq',
+                question: '电气设备的金属外壳接地属于工作接地。',
+                answer: '错误',
+                explanation: '电气设备的金属外壳接地属于保护接地，而非工作接地。'
+            },
+            {
+                id: 241,
+                type: 'tfq',
+                question: '接地电阻测试仪测量接地电阻时，接地极、电压极和电流极之间的距离应符合要求。',
+                answer: '正确',
+                explanation: '这是保证接地电阻测量 accuracy 的重要条件。'
+            },
+            {
+                id: 242,
+                type: 'tfq',
+                question: '万用表在测量电压时，应串联在电路中。',
+                answer: '错误',
+                explanation: '万用表测量电压时应并联在电路中。'
+            },
+            {
+                id: 243,
+                type: 'tfq',
+                question: '兆欧表在使用前应先进行开路和短路试验。',
+                answer: '正确',
+                explanation: '这是检查兆欧表是否正常工作的必要步骤。'
+            },
+            {
+                id: 244,
+                type: 'tfq',
+                question: '示波器只能测量电压信号，不能测量电流信号。',
+                answer: '错误',
+                explanation: '示波器通过电流互感器等附件也可以测量电流信号。'
+            },
+            {
+                id: 245,
+                type: 'tfq',
+                question: '钳形电流表在测量电流时，不需要切断电路。',
+                answer: '正确',
+                explanation: '这是钳形电流表的主要优点。'
+            },
+            {
+                id: 246,
+                type: 'tfq',
+                question: '电桥是一种专门用于测量电阻的仪器，不能测量电容和电感。',
+                answer: '错误',
+                explanation: '交流电桥可以测量电容、电感等参数。'
+            },
+            {
+                id: 247,
+                type: 'tfq',
+                question: '在电气设备检修时，必须先切断电源，再进行验电、放电等操作。',
+                answer: '正确',
+                explanation: '这是电气设备检修的基本安全规程。'
+            },
+            {
+                id: 248,
+                type: 'tfq',
+                question: '高压设备发生接地时，室内不得接近故障点 4m 以内，室外不得接近故障点 8m 以内，进入上述范围人员必须穿绝缘靴，接触设备的外壳和构架时，应戴绝缘手套。但如果穿了绝缘靴，就可以随意接近故障点。',
+                answer: '错误',
+                explanation: '即使穿了绝缘靴，也不允许随意接近高压接地故障点。'
+            },
+            {
+                id: 249,
+                type: 'tfq',
+                question: '电力电缆的绝缘层主要作用是防止漏电和保证电缆的电气性能。',
+                answer: '正确',
+                explanation: '这是电缆绝缘层的主要功能。'
+            },
+            {
+                id: 250,
+                type: 'tfq',
+                question: '电线电缆的线芯通常采用铝线，因为铝的导电性比铜好且成本低。',
+                answer: '错误',
+                explanation: '铜的导电性比铝好，电线电缆线芯采用铝线主要是因为成本低、重量轻。'
+            },
+            {
+                id: 251,
+                type: 'tfq',
+                question: '电气火灾发生时，应先切断电源，再使用干粉灭火器、二氧化碳灭火器等进行灭火，严禁用水灭火。',
+                answer: '正确',
+                explanation: '这是电气火灾扑救的基本安全规定。'
+            },
+            {
+                id: 252,
+                type: 'tfq',
+                question: '在三相四线制供电系统中，中性线的电流一定为零。',
+                answer: '错误',
+                explanation: '三相四线制供电系统中，只有三相负载对称时中性线电流才为零。'
+            },
+            {
+                id: 253,
+                type: 'tfq',
+                question: '异步电动机的转差率是衡量异步电动机运行性能的一个重要参数。',
+                answer: '正确',
+                explanation: '转差率是异步电动机的重要参数，反映了电机的运行状态。'
+            },
+            {
+                id: 254,
+                type: 'tfq',
+                question: '同步电动机的转速不随负载的变化而变化，始终保持同步转速。但在启动时，也不需要特殊的启动装置。',
+                answer: '错误',
+                explanation: '同步电动机启动时需要特殊的启动装置（如异步启动法）。'
+            },
+            {
+                id: 255,
+                type: 'tfq',
+                question: '变压器的空载损耗主要是铁损，与负载大小无关。',
+                answer: '正确',
+                explanation: '变压器的空载损耗主要是铁损（磁滞损耗和涡流损耗），与负载无关。'
+            },
+            {
+                id: 256,
+                type: 'tfq',
+                question: '电容器的电容量与极板的面积、极板间的距离和极板间的介质有关，与所加电压和电荷量无关。但在充电过程中，电容量会逐渐增大。',
+                answer: '错误',
+                explanation: '电容器的电容量是其固有属性，充电过程中不会改变。'
+            },
+            {
+                id: 257,
+                type: 'tfq',
+                question: '电感线圈的自感系数与线圈的匝数、形状、尺寸以及周围介质的磁导率有关。',
+                answer: '正确',
+                explanation: '这是决定电感线圈自感系数的主要因素。'
+            },
+            {
+                id: 258,
+                type: 'tfq',
+                question: '在交流电路中，电阻、电感和电容元件上的电压和电流的有效值之间都满足欧姆定律。',
+                answer: '错误',
+                explanation: '电感和电容元件上的电压和电流的有效值之间满足的是复数形式的欧姆定律。'
+            },
+            {
+                id: 259,
+                type: 'tfq',
+                question: '三相异步电动机的起动转矩与电源电压的平方成正比。',
+                answer: '正确',
+                explanation: '三相异步电动机的起动转矩Tₛ∝U²。'
+            },
+            {
+                id: 260,
+                type: 'tfq',
+                question: '直流电动机的调速方法有改变电枢电压调速、改变励磁电流调速和改变电枢回路电阻调速，其中改变电枢回路电阻调速属于无级调速。',
+                answer: '错误',
+                explanation: '改变电枢回路电阻调速属于有级调速，不能实现平滑调速。'
+            },
+            {
+                id: 261,
+                type: 'tfq',
+                question: '变压器在运行中，若发现油温过高，应立即停止运行，检查原因。',
+                answer: '正确',
+                explanation: '油温过高可能是变压器故障的表现，应及时处理。'
+            },
+            {
+                id: 262,
+                type: 'tfq',
+                question: '电压互感器二次侧的额定电压一般为 100V，电流互感器二次侧的额定电流一般为 5A，因此它们可以互换使用。',
+                answer: '错误',
+                explanation: '电压互感器和电流互感器的工作原理和结构不同，不能互换使用。'
+            },
+            {
+                id: 263,
+                type: 'tfq',
+                question: '交流接触器的铁心用硅钢片叠成，是为了减少铁心的涡流损耗和磁滞损耗。',
+                answer: '正确',
+                explanation: '这是减少交流接触器铁心损耗的有效措施。'
+            },
+            {
+                id: 264,
+                type: 'tfq',
+                question: '热继电器在使用过程中，应定期检查其动作是否正常，若动作频繁，应增大热元件的整定电流。',
+                answer: '错误',
+                explanation: '热继电器动作频繁应查明原因，而不是简单增大整定电流。'
+            },
+            {
+                id: 265,
+                type: 'tfq',
+                question: '熔断器在电路中主要用于短路保护，也可在一定程度上用于过载保护。',
+                answer: '正确',
+                explanation: '熔断器具有一定的反时限特性，可在一定程度上起到过载保护作用。'
+            },
+            {
+                id: 266,
+                type: 'tfq',
+                question: '漏电保护器的动作电流越小越好，这样可以更灵敏地检测到漏电故障。',
+                answer: '错误',
+                explanation: '漏电保护器的动作电流应根据使用场合合理选择，并非越小越好。'
+            },
+            {
+                id: 267,
+                type: 'tfq',
+                question: '在照明电路中，为了保证安全，灯具的安装高度应符合规定，一般室内灯具的安装高度不应低于 2.5m。',
+                answer: '正确',
+                explanation: '这是照明灯具安装的基本安全要求。'
+            },
+            {
+                id: 268,
+                type: 'tfq',
+                question: '电气设备的接地电阻越小，接地保护的效果越差。',
+                answer: '错误',
+                explanation: '电气设备的接地电阻越小，接地保护的效果越好。'
+            },
+            {
+                id: 269,
+                type: 'tfq',
+                question: '万用表在测量电阻时，每换一次量程都需要重新进行欧姆调零。',
+                answer: '正确',
+                explanation: '这是保证电阻测量 accuracy 的必要步骤。'
+            },
+            {
+                id: 270,
+                type: 'tfq',
+                question: '兆欧表测量绝缘电阻时，摇动手柄的速度越快，测量结果越准确。',
+                answer: '错误',
+                explanation: '兆欧表摇动手柄的速度应保持在规定范围内（通常为120r/min），过快或过慢都会影响测量 accuracy。'
+            },
+            {
+                id: 271,
+                type: 'tfq',
+                question: '示波器可以观察信号的波形、测量信号的幅度、频率等参数。',
+                answer: '正确',
+                explanation: '这是示波器的基本功能。'
+            },
+            {
+                id: 272,
+                type: 'tfq',
+                question: '钳形电流表在测量小电流时，为了提高测量精度，可以将被测导线在钳口上多绕几圈。但这样会使测量结果偏小。',
+                answer: '错误',
+                explanation: '将被测导线在钳口上多绕几圈，测量结果应乘以匝数才是实际电流值。'
+            },
+            {
+                id: 273,
+                type: 'tfq',
+                question: '电桥在测量电阻时，当电桥平衡时，桥臂上的电阻满足一定的比例关系。',
+                answer: '正确',
+                explanation: '电桥平衡的条件是对臂电阻的乘积相等（R₁/R₂=R₃/R₄）。'
+            },
+            {
+                id: 274,
+                type: 'tfq',
+                question: '在电气设备的预防性试验中，直流耐压试验比交流耐压试验更能有效地发现设备的绝缘缺陷。',
+                answer: '错误',
+                explanation: '交流耐压试验更接近设备的实际运行条件，能更有效地发现绝缘缺陷。'
+            },
+            {
+                id: 275,
+                type: 'tfq',
+                question: '电力电缆在敷设时，应避免与热力管道等高温设施近距离平行或交叉敷设。',
+                answer: '正确',
+                explanation: '这是为了防止电缆过热老化，保证安全运行。'
+            },
+            {
+                id: 276,
+                type: 'tfq',
+                question: '电线电缆在使用过程中，只要不超过其额定载流量，就不会发生故障。',
+                answer: '错误',
+                explanation: '电线电缆故障还可能由绝缘老化、机械损伤等原因引起。'
+            },
+            {
+                id: 277,
+                type: 'tfq',
+                question: '电气火灾的原因主要有电气设备短路、过载、接触不良、散热不良等。',
+                answer: '正确',
+                explanation: '这些是电气火灾的主要原因。'
+            },
+            {
+                id: 278,
+                type: 'tfq',
+                question: '在三相三线制供电系统中，无论负载是否对称，三个线电流的相量和都为零。',
+                answer: '错误',
+                explanation: '在三相三线制供电系统中，只有三相负载对称时，三个线电流的相量和才为零。'
+            },
+            {
+                id: 279,
+                type: 'tfq',
+                question: '异步电动机在运行过程中，若电源电压下降，电动机的转速会下降，电流会增大。',
+                answer: '正确',
+                explanation: '这是异步电动机的基本特性。'
+            },
+            {
+                id: 280,
+                type: 'tfq',
+                question: '电动机的绝缘等级反映了绝缘材料的耐热性能。',
+                answer: '正确',
+                explanation: '绝缘等级是指电机所用绝缘材料的耐热等级，决定了电机的允许工作温度。'
+            },
+
+            // 三、填空题（60道）
+            {
+                id: 281,
+                type: 'fill',
+                question: '三视图是指 主视图 、俯视图和 ______。',
+                answer: '左视图',
+                explanation: '三视图包括主视图、俯视图和左视图，分别从不同方向展示物体的结构。'
+            },
+            {
+                id: 282,
+                type: 'fill',
+                question: '识读和绘制三视图的规则是：主俯视图 长对正，主左视图 高平齐，俯左视图 ______。',
+                answer: '宽相等',
+                explanation: '三视图的投影规律：长对正、高平齐、宽相等。'
+            },
+            {
+                id: 283,
+                type: 'fill',
+                question: '一张完整的零件图应包括 图形 、尺寸、技术要求、和 ______。',
+                answer: '标题栏',
+                explanation: '零件图必须包含图形、尺寸、技术要求和标题栏四部分内容。'
+            },
+            {
+                id: 284,
+                type: 'fill',
+                question: '手工电弧焊工具有 电焊机、焊钳、______。',
+                answer: '面罩',
+                explanation: '手工电弧焊的基本工具包括电焊机、焊钳和面罩。'
+            },
+            {
+                id: 285,
+                type: 'fill',
+                question: '手工电弧焊焊件的接头形式有 对接 接头、T字接头、角接接头和 ______。',
+                answer: '搭接接头',
+                explanation: '手工电弧焊常见的接头形式包括对接、T字接、角接和搭接。'
+            },
+            {
+                id: 286,
+                type: 'fill',
+                question: '手工电弧焊的焊接方式分为平焊、横焊、立焊和 ______ 四种。',
+                answer: '仰焊',
+                explanation: '手工电弧焊的四种基本焊接位置为平焊、横焊、立焊和仰焊。'
+            },
+            {
+                id: 287,
+                type: 'fill',
+                question: '回火包括 逆火 和 ______ 两种。',
+                answer: '回烧',
+                explanation: '回火是气焊中的一种危险现象，包括逆火和回烧两种情况。'
+            },
+            {
+                id: 288,
+                type: 'fill',
+                question: '气焊火焰有 中性 火焰 碳化 火焰和 ______ 火焰。',
+                answer: '氧化',
+                explanation: '气焊火焰根据氧气和乙炔的比例不同，可分为中性焰、碳化焰和氧化焰。'
+            },
+            {
+                id: 289,
+                type: 'fill',
+                question: '节约用电的措施和途径：一是提高用电管理水平 ，二是依靠 ______ 和设备改造。',
+                answer: '技术进步',
+                explanation: '节约用电主要通过提高管理水平和技术进步与设备改造来实现。'
+            },
+            {
+                id: 290,
+                type: 'fill',
+                question: '提高企业供电的功率因数的方法，一是提高自然功率因数法，二是 ______。',
+                answer: '无功补偿',
+                explanation: '提高功率因数的主要方法包括提高自然功率因数和采用无功补偿装置。'
+            },
+            {
+                id: 291,
+                type: 'fill',
+                question: '车间生产管理的基本内容，按其职能可分为组织、计划、准备和 ______ 四个方面。',
+                answer: '控制',
+                explanation: '车间生产管理的基本职能包括组织、计划、准备和控制。'
+            },
+            {
+                id: 292,
+                type: 'fill',
+                question: '若星形连接的三个电阻RY的阻值相等，将其等效为三角形连接时，三个电阻RΔ阻值也相等,二者之间的关系为RΔ=______RY。',
+                answer: '3',
+                explanation: '星形连接与三角形连接的电阻等效变换关系为RΔ=3RY。'
+            },
+            {
+                id: 293,
+                type: 'fill',
+                question: '用支路电流法解题时，电路图中若有三个节点，则应列出______个电流方程。应列出的回路电压方程在数量上应等于电路图中的 网孔 数。',
+                answer: '2',
+                explanation: '支路电流法中，电流方程的数量为节点数减1。'
+            },
+            {
+                id: 294,
+                type: 'fill',
+                question: '对 ______ 数较多的电路求解，用回路电流法较为方便。',
+                answer: '支路',
+                explanation: '回路电流法适用于支路数较多的电路。'
+            },
+            {
+                id: 295,
+                type: 'fill',
+                question: '对只有两个节点的电路求解，用 ______ 法最为简便。',
+                answer: '节点电压',
+                explanation: '节点电压法对于只有两个节点的电路求解非常简便。'
+            },
+            {
+                id: 296,
+                type: 'fill',
+                question: '用叠加原理分析电路，假定某个电源单独作用时，应将其余的恒压源作全部 ______ 处理，将恒流源作全部开路处理。',
+                answer: '短路',
+                explanation: '叠加原理中，恒压源单独作用时，其他恒压源短路，恒流源开路。'
+            },
+            {
+                id: 297,
+                type: 'fill',
+                question: '任何只包含电阻和电源的线性有源二端网络，对外都可以用一个 ______ 电源来代替。',
+                answer: '等效',
+                explanation: '这是戴维南定理和诺顿定理的基本内容。'
+            },
+            {
+                id: 298,
+                type: 'fill',
+                question: '端电压与电流无关的电源称为 ______ 电源。',
+                answer: '理想电压',
+                explanation: '理想电压源的端电压不受输出电流影响。'
+            },
+            {
+                id: 299,
+                type: 'fill',
+                question: '实际电压源为一个理想电压源与 ______ 相串联而成。',
+                answer: '电阻',
+                explanation: '实际电压源可以等效为理想电压源与内阻串联。'
+            },
+            {
+                id: 300,
+                type: 'fill',
+                question: '电流值大小与电压无关的电源称为 ______ 电源。',
+                answer: '理想电流',
+                explanation: '理想电流源的输出电流不受端电压影响。'
+            },
+            {
+                id: 301,
+                type: 'fill',
+                question: '实际电流源为一个理想电流源与 ______ 相并联而成。',
+                answer: '内阻',
+                explanation: '实际电流源可以等效为理想电流源与内阻并联。'
+            },
+            {
+                id: 302,
+                type: 'fill',
+                question: '采用以复数运算为基础的符号计算法简称为 ______ 法。',
+                answer: '符号',
+                explanation: '这是交流电路分析中常用的方法。'
+            },
+            {
+                id: 303,
+                type: 'fill',
+                question: '用复数表示的正弦量称为 ______，通常用复数的模表示正弦量的有效值,用复数的幅角表示正弦量的初相角。',
+                answer: '相量',
+                explanation: '相量是表示正弦量的复数形式。'
+            },
+            {
+                id: 304,
+                type: 'fill',
+                question: '复阻抗的模代表 ______，幅角代表阻抗角实部代表电路的电阻，虚部代表电路的电抗。',
+                answer: '阻抗',
+                explanation: '复阻抗的模等于阻抗的大小。'
+            },
+            {
+                id: 305,
+                type: 'fill',
+                question: '复功率的模代表 ______，幅角代表功率因数角，实部代表有功功率，虚部代表无功功率。',
+                answer: '视在功率',
+                explanation: '复功率的模等于视在功率的大小。'
+            },
+            {
+                id: 306,
+                type: 'fill',
+                question: '复数有三种表示形式：一种是三角函数式，一种是代数式，一种是 ______ 式。',
+                answer: '极坐标',
+                explanation: '复数的三种基本表示形式为代数式、三角函数式和极坐标式。'
+            },
+            {
+                id: 307,
+                type: 'fill',
+                question: '正弦交流电流i=I sin(ωt+φi)，正弦交流电压u=Um sin(ωt+φu)。它们用极坐标式复数表示，分别为I= I/√2∠φi 和U=Um/√2∠φu，φi和φu分别为i与u的 ______。',
+                answer: '初相角',
+                explanation: 'φi和φu分别是电流和电压的初相角。'
+            },
+            {
+                id: 308,
+                type: 'fill',
+                question: '处在交流电路中的纯电阻，两端所加电压与流过电阻的电流在相位上是 ______ 的。',
+                answer: '同相位',
+                explanation: '纯电阻电路中电压与电流同相。'
+            },
+            {
+                id: 309,
+                type: 'fill',
+                question: '在正弦交流电路中，流过纯电感线圈中的电流比它两端的电压在相位上 ______ 90°。',
+                answer: '滞后',
+                explanation: '纯电感电路中电流滞后电压90°。'
+            },
+            {
+                id: 310,
+                type: 'fill',
+                question: '电感线圈对交流电流的阻碍能力称为 ______，用符号 XL表示。单位是 Ω。',
+                answer: '感抗',
+                explanation: '感抗是电感对交流电流的阻碍作用。'
+            },
+            {
+                id: 311,
+                type: 'fill',
+                question: '衡量电感线圈与交流电源之间 ______ 能力的物理量称为无功功率。',
+                answer: '能量交换',
+                explanation: '这是无功功率的物理意义。'
+            },
+            {
+                id: 312,
+                type: 'fill',
+                question: '在正弦交流电路中，流过纯电容的电流比加在它两端的电压在相位上 ______ 90°。',
+                answer: '超前',
+                explanation: '纯电容电路中电流超前电压90°。'
+            },
+            {
+                id: 313,
+                type: 'fill',
+                question: '电容器对交流电流的阻碍能力称为 ______，用符号 XC表示，单位是 Ω。',
+                answer: '容抗',
+                explanation: '容抗是电容对交流电流的阻碍作用。'
+            },
+            {
+                id: 314,
+                type: 'fill',
+                question: '衡量电容器与交流电源之间 ______ 能力的物理量称为无功功率。',
+                answer: '能量交换',
+                explanation: '这是无功功率的物理意义。'
+            },
+            {
+                id: 315,
+                type: 'fill',
+                question: '在电路中,电感有抑制 ______ 谐波电流的作用；电容有抑制 低频 谐波电流的作用。',
+                answer: '高频',
+                explanation: '电感对高频电流阻碍作用大，可抑制高频谐波。'
+            },
+            {
+                id: 316,
+                type: 'fill',
+                question: '在R.C电路的暂态过程中，不能突变的两个物理量是 电量 和 ______。可以突变的物理量是 电流 。',
+                answer: '电压',
+                explanation: '电容电压在暂态过程中不能突变。'
+            },
+            {
+                id: 317,
+                type: 'fill',
+                question: '三相负载对称的条件是：各相负载的 ______ 相等， 阻抗角 也相等。',
+                answer: '阻抗',
+                explanation: '三相负载对称需满足阻抗大小相等且阻抗角相同。'
+            },
+            {
+                id: 318,
+                type: 'fill',
+                question: '三相负载的连接方式有 ______ 和Δ 两种。',
+                answer: 'Y',
+                explanation: '三相负载的基本连接方式为星形（Y）和三角形（Δ）。'
+            },
+            {
+                id: 319,
+                type: 'fill',
+                question: '三相四线制系统中，中性线的作用是使Y型连接的不对称负载上的 ______ 电压保持 对称 。',
+                answer: '相',
+                explanation: '中性线可保证不对称Y型负载的相电压对称。'
+            },
+            {
+                id: 320,
+                type: 'fill',
+                question: '涡流具有　______ 和 去磁 作用，在应用中各有利弊。',
+                answer: '热效应',
+                explanation: '涡流既有热效应（如电磁炉），也有去磁作用（如电机铁损）。'
+            },
+            {
+                id: 321,
+                type: 'fill',
+                question: '基尔霍夫电流定律的内容是：在任意时刻，流入电路中 ______ 的电流的 代数和 等于流出该节点的电流的代数和。',
+                answer: '任一节点',
+                explanation: '基尔霍夫电流定律适用于电路中任意节点。'
+            },
+            {
+                id: 322,
+                type: 'fill',
+                question: '基尔霍夫电压定律的内容是：在任意时刻，沿电路中任一闭合回路绕行一周，各段电压的 ______ 等于零。',
+                answer: '代数和',
+                explanation: '这是基尔霍夫电压定律的核心内容。'
+            },
+            {
+                id: 323,
+                type: 'fill',
+                question: '叠加定理只适用于 ______ 电路，不适用于 非线性 电路。',
+                answer: '线性',
+                explanation: '叠加定理是线性电路的基本定理。'
+            },
+            {
+                id: 324,
+                type: 'fill',
+                question: '戴维南等效电路中的等效电阻等于有源二端网络中所有独立电源置零后，端口处的 ______。',
+                answer: '等效电阻',
+                explanation: '这是计算戴维南等效电阻的方法。'
+            },
+            {
+                id: 325,
+                type: 'fill',
+                question: '一阶 RC 电路的时间常数 τ = ______，时间常数越大，电路的过渡过程越 长 。',
+                answer: 'RC',
+                explanation: 'RC电路的时间常数τ=RC，决定过渡过程的快慢。'
+            },
+            {
+                id: 326,
+                type: 'fill',
+                question: '一阶 RL 电路的时间常数 τ = ______，时间常数越小，电路的过渡过程越 短 。',
+                answer: 'L/R',
+                explanation: 'RL电路的时间常数τ=L/R。'
+            },
+            {
+                id: 327,
+                type: 'fill',
+                question: '三相异步电动机的调速方法有变极调速、变频调速和 ______ 调速。',
+                answer: '改变转差率',
+                explanation: '这是三相异步电动机的三种基本调速方式。'
+            },
+            {
+                id: 328,
+                type: 'fill',
+                question: '直流电动机的调速方法有改变电枢电压调速、改变励磁电流调速和 ______ 调速。',
+                answer: '改变电枢回路电阻',
+                explanation: '这是直流电动机的三种经典调速方法。'
+            },
+            {
+                id: 329,
+                type: 'fill',
+                question: '变压器的损耗包括 ______ 和 铜损 ，铁损又称为空载损耗，铜损又称为负载损耗。',
+                answer: '铁损',
+                explanation: '变压器的主要损耗为铁损和铜损。'
+            },
+            {
+                id: 330,
+                type: 'fill',
+                question: '电压互感器二次侧额定电压一般为 ______，电流互感器二次侧额定电流一般为 5A 。',
+                answer: '100V',
+                explanation: '这是互感器的标准额定值。'
+            },
+            {
+                id: 331,
+                type: 'fill',
+                question: '交流接触器的自锁控制是通过接触器的 ______ 实现的，互锁控制是通过接触器的 常闭辅助触头 实现的。',
+                answer: '常开辅助触头',
+                explanation: '自锁依靠常开辅助触头，互锁依靠常闭辅助触头。'
+            },
+            {
+                id: 332,
+                type: 'fill',
+                question: '热继电器主要用于电动机的 ______ 保护，熔断器主要用于电路的 短路 保护。',
+                answer: '过载',
+                explanation: '热继电器和熔断器的保护功能不同。'
+            },
+            {
+                id: 333,
+                type: 'fill',
+                question: '漏电保护器按动作原理可分为 ______ 、 电流型 和 脉冲型 等。',
+                answer: '电压型',
+                explanation: '这是漏电保护器的主要分类方式。'
+            },
+            {
+                id: 334,
+                type: 'fill',
+                question: '照明电路中，常用的灯具安装方式有 吸顶式 、 嵌入式 、 ______ 和壁装式等。',
+                answer: '悬挂式',
+                explanation: '这些是照明灯具的常见安装方式。'
+            },
+            {
+                id: 335,
+                type: 'fill',
+                question: '电气设备的接地方式有 ______ 、 保护接地 、 保护接零 和重复接地等。',
+                answer: '工作接地',
+                explanation: '工作接地是为了电路正常工作而进行的接地（如中性点接地）。'
+            },
+            {
+                id: 336,
+                type: 'fill',
+                question: '万用表一般可用于测量 ______ 、 电流 、 电阻 等电量，有的万用表还可以测量电容、电感、二极管、三极管等。',
+                answer: '电压',
+                explanation: '电压、电流、电阻是万用表的基本测量对象。'
+            },
+            {
+                id: 337,
+                type: 'fill',
+                question: '兆欧表主要用于测量电气设备的 ______，其单位为 兆欧（MΩ） 。',
+                answer: '绝缘电阻',
+                explanation: '兆欧表是测量绝缘电阻的专用工具。'
+            },
+            {
+                id: 338,
+                type: 'fill',
+                question: '示波器可以观察信号的 ______，测量信号的 幅度 、 频率 、相位等参数。',
+                answer: '波形',
+                explanation: '观察波形是示波器的基本功能。'
+            },
+            {
+                id: 339,
+                type: 'fill',
+                question: '钳形电流表主要用于在不切断电路的情况下测量 ______，其测量原理是基于 电磁感应 定律。',
+                answer: '交流电流',
+                explanation: '这是钳形电流表的主要用途和工作原理。'
+            },
+            {
+                id: 340,
+                type: 'fill',
+                question: '电桥是一种比较式测量仪器，常见的有 直流电桥 和 交流电桥 ，直流电桥主要用于测量 ______，交流电桥可用于测量 电容 、 电感 等。',
+                answer: '电阻',
+                explanation: '直流电桥是精确测量电阻的仪器。'
+            },
+
+            // 四、问答题（20道）
+            {
+                id: 341,
+                type: 'essay',
+                question: '三相异步电机造成匝间短路的原因是什么？',
+                answer: `1）在安装过程中线圈绝缘碰破、磨损。
+2）运行中，长期高温运行，绝缘老化。
+3）使用中严重过负荷运行。`,
+                explanation: '这些是导致三相异步电机匝间短路的主要原因。'
+            },
+            {
+                id: 342,
+                type: 'essay',
+                question: '如何查找电机过载的主要原因？',
+                answer: `机械方面：1）负载过大2）轴联结不平衡，轴心不对称3）电机通风有故障
+电气方面：1）电机容量过小2）电机、定子、转子、铁芯摩擦3)绕组绝缘表层灰尘油污多，影响散热。`,
+                explanation: '电机过载需从机械和电气两方面排查原因。'
+            },
+            {
+                id: 343,
+                type: 'essay',
+                question: '何为变压器的同名端？',
+                answer: '在某一瞬间，一次绕组的某一电位为正时，二次绕组也必然同时有一个电位正的对应端,这两个对应端叫同名端，也叫同级性端。',
+                explanation: '同名端是变压器绕组极性的重要概念。'
+            },
+            {
+                id: 344,
+                type: 'essay',
+                question: '变压器的允许温度',
+                answer: '允许温度是指变压器运行时，各绝缘材料的上限破坏绝缘的温度。',
+                explanation: '变压器的允许温度由绝缘材料的等级决定。'
+            },
+            {
+                id: 345,
+                type: 'essay',
+                question: '什么叫减压起动？',
+                answer: '在电机启动时，将电压适当降低后再加到定子绕组上，起动后，再将电压恢复到额定电压，叫降压起动。',
+                explanation: '减压起动可降低电机的起动电流。'
+            },
+            {
+                id: 346,
+                type: 'essay',
+                question: '什么叫失压保护？',
+                answer: '运行中的设备，由于某种原因引起瞬时断电，在排除故障后恢复供电，该设备不能自行起动，用以保护人身安全和设施安全，这种保护措施就叫失压保护，或叫零压保护。',
+                explanation: '失压保护是保障设备和人身安全的重要措施。'
+            },
+            {
+                id: 347,
+                type: 'essay',
+                question: '电气照明的基本要求是什么？',
+                answer: `1）照度达到标准 
+2）空间亮度分布合理，无光污视觉环境
+3）安全、经济、美观，便于安装及维修`,
+                explanation: '这些是电气照明设计的基本准则。'
+            },
+            {
+                id: 348,
+                type: 'essay',
+                question: '用万用表判断晶体二极管极性的原理是什么？',
+                answer: '是用二极管的单向性即正向电阻小（通）反向电阻大（截止）的原理。',
+                explanation: '这是利用二极管单向导电性判断极性的方法。'
+            },
+            {
+                id: 349,
+                type: 'essay',
+                question: '保证安全的技术措施有那些？',
+                answer: '1）停电；2）验电；3）装设接地线；4）悬挂标示牌和装设遮栏。',
+                explanation: '这些是电气安全工作的基本技术措施。'
+            },
+            {
+                id: 350,
+                type: 'essay',
+                question: '什么叫交流电机额定功率？',
+                answer: '是指电机在额定工作状态运行时，轴上允许输出的机械功率。',
+                explanation: '额定功率是电机的重要参数之一。'
+            },
+            {
+                id: 351,
+                type: 'essay',
+                question: '什么是空气断路器 （自动开关）？',
+                answer: '是用手动（或电动）合闸，用锁扣保持合闸位置，由脱扣机构作用于跳闸并具有灭弧装置的低压开关，当电路内发生过负荷. 短路. 电压降低或消失时，能自动切断电路。',
+                explanation: '空气断路器是低压配电系统中的重要保护电器。'
+            },
+            {
+                id: 352,
+                type: 'essay',
+                question: '什么是三相交流电？',
+                answer: '由三个频率相同、电势振幅相等、相位差互差 120 °角的交流电路组成的电力系统，叫三相交流电。',
+                explanation: '这是三相交流电的基本定义。'
+            },
+            {
+                id: 353,
+                type: 'essay',
+                question: '为什么电缆线路停电后用验电笔验电时，短时间内还有电？',
+                answer: '电缆线路相当于一个电容器，停电后线路还存有剩余电荷，对地仍然有电位差。若停电立即验电，验电笔会显示出线路有电。因此必须经过充分放电，验电无电后，方可装设接地线。',
+                explanation: '这是由电缆的电容特性决定的。'
+            },
+            {
+                id: 354,
+                type: 'essay',
+                question: '使用电流、电压表应注意什么问题？',
+                answer: `1）电流表必须与负载串联，电压表必须与被测电压并联。2）应根据被测量值的大小，选择适当的量程。3）对于磁电系仪表，使用时要注意端子极性。4）测量前，要弄清楚被测电流或电压的性质和波形，选择合适的仪表。`,
+                explanation: '正确使用电流、电压表是保证测量 accuracy 和安全的前提。'
+            },
+            {
+                id: 355,
+                type: 'essay',
+                question: '导线联接的基本要求是什么？',
+                answer: `1）联接牢靠，接头电阻小，机械强度高；2）防止接头的电化腐蚀；3）绝缘性能好。`,
+                explanation: '这些是导线联接的基本要求。'
+            },
+            {
+                id: 356,
+                type: 'essay',
+                question: '电力拖动有哪几部分组成？',
+                answer: '电动机、控制设备、保护设备、电缆及机械传动装置',
+                explanation: '这是电力拖动系统的基本组成部分。'
+            },
+            {
+                id: 357,
+                type: 'essay',
+                question: '变压器油的作用是什么？',
+                answer: '散热和绝缘',
+                explanation: '变压器油是变压器的重要绝缘和冷却介质。'
+            },
+            {
+                id: 358,
+                type: 'essay',
+                question: '二极管的单向性是什么？',
+                answer: '正向导通，反向截止。',
+                explanation: '单向导电性是二极管的核心特性。'
+            },
+            {
+                id: 359,
+                type: 'essay',
+                question: '容量较大的交流接触器采用什么装置灭弧？',
+                answer: '1）真空灭弧     2）栅片灭弧',
+                explanation: '这些是大容量交流接触器常用的灭弧方式。'
+            },
+            {
+                id: 360,
+                type: 'essay',
+                question: '变压器空载运行时，为什么功率因数很低？',
+                answer: '因为空载时，电流的有功分量较小，而无功分量较大，所以功率因数就很小。',
+                explanation: '变压器空载时主要消耗无功功率，因此功率因数低。'
+            },
+
+            // 五、综合题（10道）
+            {
+                id: 361,
+                type: 'comprehensive',
+                question: '有一三角形连接的三相对称负载,每相具有电阻R=6Ω,感抗XL=6Ω,接在线电压为380V的电源上,则该三相负载的有功功率为______W、无功功率为______Var、视在功率为______VA。',
+                answer: '36130；36130；51090',
+                explanation: `每相阻抗Z=√(6²+6²)=6√2Ω，相电流Iₚ=Uₚ/Z=380/(6√2)≈36.3A，线电流Iₗ=√3Iₚ≈62.9A。
+有功功率P=3UₚIₚcosφ=3×380×36.3×(6/(6√2))≈36130W，
+无功功率Q=3UₚIₚsinφ=36130Var，
+视在功率S=√(P²+Q²)≈51090VA。`
+            },
+            {
+                id: 362,
+                type: 'comprehensive',
+                question: '某电容器的电容为C=31.9μF,接在频率为f=50HZ的电源上, 求电容器的容抗______Ω。',
+                answer: '100',
+                explanation: `容抗Xc=1/(2πfC)=1/(2×3.14×50×31.9×10⁻⁶)≈100Ω。`
+            },
+            {
+                id: 363,
+                type: 'comprehensive',
+                question: '频率f=100Hz的工频交流电,则它的周期等于______s。',
+                answer: '0.01',
+                explanation: `周期T=1/f=1/100=0.01s。`
+            },
+            {
+                id: 364,
+                type: 'comprehensive',
+                question: '三相负载接成星型,已知线电压有效值为380V,每相负载的阻抗为Z=22Ω。求：（1）相电压的有效值为______V；（2）相电流的有效值为______A；（3）线电流的有效值为______A。',
+                answer: '220；10；10',
+                explanation: `星型连接时，相电压Uₚ=Uₗ/√3=380/√3≈220V，
+相电流Iₚ=Uₚ/Z=220/22=10A，
+线电流Iₗ=Iₚ=10A。`
+            },
+            {
+                id: 365,
+                type: 'comprehensive',
+                question: '已知一个电阻R＝20Ω,当加上U＝6.3V电压时,电阻上的电流为______A。',
+                answer: '0.315',
+                explanation: `根据欧姆定律I=U/R=6.3/20=0.315A。`
+            },
+            {
+                id: 366,
+                type: 'comprehensive',
+                question: '一台三相异步电动机额定电流IN=22A，采用JR16型热继电器保护，要求整定电流为电动机额定电流的1.1倍。若热继电器刻度范围为0.8∼1.2IN，试确定实际整定值Iset范围为______A。',
+                answer: '19.8∼26.4',
+                explanation: `整定电流Iset=1.1×22=24.2A，在0.8×22=17.6A到1.2×22=26.4A范围内，实际整定值应为19.8∼26.4A。`
+            },
+            {
+                id: 367,
+                type: 'comprehensive',
+                question: '一电熨斗发热元件的电阻是R=30Ω,通入电流为I=3.5A,求其功率P为______W。',
+                answer: '367.5',
+                explanation: `功率P=I²R=3.5²×30=367.5W。`
+            },
+            {
+                id: 368,
+                type: 'comprehensive',
+                question: '欲使I=200mA的电流流过一个R=90Ω的电阻,则需要在该电阻的两端施加的电压等于______V。',
+                answer: '18',
+                explanation: `根据欧姆定律U=IR=0.2×90=18V。`
+            },
+            {
+                id: 369,
+                type: 'comprehensive',
+                question: '电阻R1和R2相并联,已知两端电压为U＝10V,总电流为I＝6A,两条支路电流之比为I1∶I2＝1∶2,则电阻R1为______Ω,R2为______Ω。',
+                answer: '5；2.5',
+                explanation: `I1=2A，I2=4A，
+R1=U/I1=10/2=5Ω，
+R2=U/I2=10/4=2.5Ω。`
+            },
+            {
+                id: 370,
+                type: 'comprehensive',
+                question: '某居民用户安装的是一只单相U=220V、I=5（20）A的电能表。则该用户同时使用的电器功率和为______W；若只接照明负载,可接80W的电灯______盏。（舍去小数取整）',
+                answer: '4400；55',
+                explanation: `最大功率P=UI=220×20=4400W，
+可接80W电灯数量=4400/80=55盏。`
+            }
+        ];
+
+        // 剩余JavaScript代码与前文保持一致...
+        // （包括状态管理、DOM操作、事件绑定等功能代码）
+ // 应用状态
+        const state = {
+            currentMode: 'normal', // normal, exam, wrong
+            currentQuestionIndex: 0,
+            questions: [],
+            userAnswers: [],
+            wrongQuestions: JSON.parse(localStorage.getItem('wrongQuestions') || '[]'),
+            startTime: null,
+            timerInterval: null,
+            timeLimit: 60 * 60 // 60分钟，单位：秒
+        };
+
+        // DOM元素
+        const pages = {
+            welcome: document.getElementById('welcomePage'),
+            practice: document.getElementById('practicePage'),
+            wrong: document.getElementById('wrongPage'),
+            stats: document.getElementById('statsPage'),
+            result: document.getElementById('resultPage')
+        };
+
+        const buttons = {
+            home: document.getElementById('homeBtn'),
+            wrong: document.getElementById('wrongBtn'),
+            stats: document.getElementById('statsBtn'),
+            prev: document.getElementById('prevBtn'),
+            submit: document.getElementById('submitBtn'),
+            next: document.getElementById('nextBtn'),
+            homeFromResult: document.getElementById('homeFromResultBtn'),
+            restart: document.getElementById('restartBtn'),
+            review: document.getElementById('reviewBtn'),
+            wrongPractice: document.getElementById('wrongPracticeBtn'),
+            clearWrong: document.getElementById('clearWrongBtn')
+        };
+
+        const elements = {
+            currentMode: document.getElementById('currentMode'),
+            questionProgress: document.getElementById('questionProgress'),
+            timer: document.getElementById('timer'),
+            timeRemaining: document.getElementById('timeRemaining'),
+            questionText: document.getElementById('questionText'),
+            optionsContainer: document.getElementById('optionsContainer'),
+            answerFeedback: document.getElementById('answerFeedback'),
+            feedbackIcon: document.getElementById('feedbackIcon'),
+            feedbackText: document.getElementById('feedbackText'),
+            explanationText: document.getElementById('explanationText'),
+            questionNav: document.getElementById('questionNav'),
+            wrongCount: document.getElementById('wrongCount'),
+            wrongQuestionsList: document.getElementById('wrongQuestionsList'),
+            resultIcon: document.getElementById('resultIcon'),
+            resultTitle: document.getElementById('resultTitle'),
+            resultScore: document.getElementById('resultScore'),
+            totalQuestions: document.getElementById('totalQuestions'),
+            correctAnswers: document.getElementById('correctAnswers'),
+            wrongAnswers: document.getElementById('wrongAnswers')
+        };
+
+        // 初始化应用
+        function initApp() {
+            updateWrongCount();
+            updateStats();
+            
+            // 绑定事件监听器
+            buttons.home.addEventListener('click', showWelcomePage);
+            buttons.wrong.addEventListener('click', showWrongPage);
+            buttons.stats.addEventListener('click', showStatsPage);
+            buttons.prev.addEventListener('click', goToPrevQuestion);
+            buttons.submit.addEventListener('click', submitAnswer);
+            buttons.next.addEventListener('click', goToNextQuestion);
+            buttons.homeFromResult.addEventListener('click', showWelcomePage);
+            buttons.restart.addEventListener('click', restartPractice);
+            buttons.review.addEventListener('click', showWrongPage);
+            buttons.wrongPractice.addEventListener('click', () => startPractice('wrong'));
+            buttons.clearWrong.addEventListener('click', clearWrongQuestions);
+        }
+
+        // 显示欢迎页面
+        function showWelcomePage() {
+            hideAllPages();
+            pages.welcome.classList.remove('hidden');
+        }
+
+        // 显示练习页面
+        function showPracticePage() {
+            hideAllPages();
+            pages.practice.classList.remove('hidden');
+            renderCurrentQuestion();
+            renderQuestionNavigation();
+            
+            // 设置当前模式显示
+            if (state.currentMode === 'exam') {
+                elements.currentMode.textContent = '模拟考试';
+                elements.currentMode.className = 'inline-block bg-warning/10 text-warning text-sm font-medium px-3 py-1 rounded-full';
+                startExamTimer();
+            } else if (state.currentMode === 'wrong') {
+                elements.currentMode.textContent = '错题练习';
+                elements.currentMode.className = 'inline-block bg-danger/10 text-danger text-sm font-medium px-3 py-1 rounded-full';
+            } else {
+                elements.currentMode.textContent = '常规练习';
+                elements.currentMode.className = 'inline-block bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full';
+            }
+            
+            // 更新进度
+            updateProgress();
+        }
+
+        // 显示错题库页面
+        function showWrongPage() {
+            hideAllPages();
+            pages.wrong.classList.remove('hidden');
+            renderWrongQuestions();
+        }
+
+        // 显示统计页面
+        function showStatsPage() {
+            hideAllPages();
+            pages.stats.classList.remove('hidden');
+            updateStats();
+        }
+
+        // 显示结果页面
+        function showResultPage() {
+            hideAllPages();
+            pages.result.classList.remove('hidden');
+            
+            // 计算得分
+            const correctCount = state.userAnswers.filter((answer, index) => {
+                return answer === state.questions[index].answer;
+            }).length;
+            
+            const totalCount = state.questions.length;
+            const score = Math.round((correctCount / totalCount) * 100);
+            
+            // 更新结果显示
+            elements.totalQuestions.textContent = totalCount;
+            elements.correctAnswers.textContent = correctCount;
+            elements.wrongAnswers.textContent = totalCount - correctCount;
+            elements.resultScore.textContent = `${score}分`;
+            
+            // 根据得分显示不同的结果
+            if (score >= 90) {
+                elements.resultIcon.className = 'inline-flex items-center justify-center w-24 h-24 rounded-full bg-secondary/20 text-secondary mb-6';
+                elements.resultIcon.querySelector('i').className = 'fa fa-trophy text-5xl';
+                elements.resultTitle.textContent = '太棒了！';
+            } else if (score >= 60) {
+                elements.resultIcon.className = 'inline-flex items-center justify-center w-24 h-24 rounded-full bg-primary/20 text-primary mb-6';
+                elements.resultIcon.querySelector('i').className = 'fa fa-check-circle text-5xl';
+                elements.resultTitle.textContent = '做得不错！';
+            } else {
+                elements.resultIcon.className = 'inline-flex items-center justify-center w-24 h-24 rounded-full bg-danger/20 text-danger mb-6';
+                elements.resultIcon.querySelector('i').className = 'fa fa-exclamation-circle text-5xl';
+                elements.resultTitle.textContent = '继续努力！';
+            }
+            
+            // 如果是模拟考试，保存记录
+            if (state.currentMode === 'exam') {
+                savePracticeRecord(score);
+            }
+            
+            // 更新统计信息
+            updateStats();
+        }
+
+        // 隐藏所有页面
+        function hideAllPages() {
+            Object.values(pages).forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // 停止计时器
+            if (state.timerInterval) {
+                clearInterval(state.timerInterval);
+                state.timerInterval = null;
+            }
+        }
+
+        // 开始练习
+function startPractice(mode) {
+    state.currentMode = mode;
+    state.currentQuestionIndex = 0;
+    
+    if (mode === 'wrong') {
+        // 错题练习模式（保持不变）
+        if (state.wrongQuestions.length === 0) {
+            alert('你的错题库为空！');
+            return;
+        }
+        state.questions = [...state.wrongQuestions];
+    } else if (mode === 'normal') {
+        // 常规练习模式：随机抽取100道题（针对电工2025题库的修改）
+        // 1. 对《一级技师理论题库--电工2025.docx》的370道题进行随机排序
+        const shuffledQuestions = [...questionBank].sort(() => Math.random() - 0.5);
+        // 2. 抽取前100道题（题库总数370道，满足抽取需求）
+        state.questions = shuffledQuestions.slice(0, 100);
+    } else if (mode === 'exam') {
+        // 模拟考试模式（保持不变）
+        const shuffledQuestions = [...questionBank].sort(() => Math.random() - 0.5);
+        state.questions = shuffledQuestions.slice(0, 60);
+    }
+    
+    state.userAnswers = new Array(state.questions.length).fill(null);
+    showPracticePage();
+}
+
+function startPractice(mode) {
+    state.currentMode = mode;
+    state.currentQuestionIndex = 0;
+    
+    if (mode === 'wrong') {
+        // 错题练习模式（保持不变）
+        if (state.wrongQuestions.length === 0) {
+            alert('你的错题库为空！');
+            return;
+        }
+        state.questions = [...state.wrongQuestions];
+    } else if (mode === 'normal') {
+        // 常规练习模式：随机抽取100道题（针对电工2025题库的修改）
+        // 1. 对《一级技师理论题库--电工2025.docx》的370道题进行随机排序
+        const shuffledQuestions = [...questionBank].sort(() => Math.random() - 0.5);
+        // 2. 抽取前100道题（题库总数370道，满足抽取需求）
+        state.questions = shuffledQuestions.slice(0, 100);
+    } else if (mode === 'exam') {
+        // 模拟考试模式（保持不变）
+        const shuffledQuestions = [...questionBank].sort(() => Math.random() - 0.5);
+        state.questions = shuffledQuestions.slice(0, 60);
+    }
+    
+    state.userAnswers = new Array(state.questions.length).fill(null);
+    showPracticePage();
+}
+
+        // 渲染当前题目
+        function renderCurrentQuestion() {
+            const question = state.questions[state.currentQuestionIndex];
+            if (!question) return;
+            
+            // 更新题目文本
+            elements.questionText.textContent = `${state.currentQuestionIndex + 1}. ${question.question}`;
+            
+            // 清空选项容器和反馈
+            elements.optionsContainer.innerHTML = '';
+            elements.answerFeedback.classList.add('hidden');
+            
+            // 根据题目类型渲染选项
+            if (question.type === 'mcq') {
+                // 选择题
+                question.options.forEach((option, index) => {
+                    const letter = String.fromCharCode(65 + index); // A, B, C, D
+                    const isAnswered = state.userAnswers[state.currentQuestionIndex] !== null;
+                    const isSelected = state.userAnswers[state.currentQuestionIndex] === letter;
+                    
+                    const optionElement = document.createElement('div');
+                    optionElement.className = `flex items-start p-4 border rounded-lg transition-all ${isAnswered ? (isSelected ? 'border-primary bg-primary/5' : 'border-gray-200') : 'border-gray-200 hover:border-primary hover:bg-primary/5'}`;
+                    
+                    const inputId = `option-${state.currentQuestionIndex}-${letter}`;
+                    
+                    optionElement.innerHTML = `
+                        <input type="radio" id="${inputId}" name="question-${state.currentQuestionIndex}" value="${letter}" 
+                            ${isSelected ? 'checked' : ''}
+                            ${isAnswered ? 'disabled' : ''}
+                            class="mt-1 mr-3 accent-primary">
+                        <label for="${inputId}" class="cursor-pointer ${isAnswered ? 'cursor-not-allowed' : ''}">
+                            <span class="font-medium mr-2">${letter}.</span>
+                            ${option}
+                        </label>
+                    `;
+                    
+                    elements.optionsContainer.appendChild(optionElement);
+                });
+            } else if (question.type === 'tfq') {
+                // 判断题
+                ['正确', '错误'].forEach((option, index) => {
+                    const letter = index === 0 ? 'A' : 'B';
+                    const isAnswered = state.userAnswers[state.currentQuestionIndex] !== null;
+                    const isSelected = state.userAnswers[state.currentQuestionIndex] === letter;
+                    
+                    const optionElement = document.createElement('div');
+                    optionElement.className = `flex items-start p-4 border rounded-lg transition-all ${isAnswered ? (isSelected ? 'border-primary bg-primary/5' : 'border-gray-200') : 'border-gray-200 hover:border-primary hover:bg-primary/5'}`;
+                    
+                    const inputId = `option-${state.currentQuestionIndex}-${letter}`;
+                    
+                    optionElement.innerHTML = `
+                        <input type="radio" id="${inputId}" name="question-${state.currentQuestionIndex}" value="${letter}" 
+                            ${isSelected ? 'checked' : ''}
+                            ${isAnswered ? 'disabled' : ''}
+                            class="mt-1 mr-3 accent-primary">
+                        <label for="${inputId}" class="cursor-pointer ${isAnswered ? 'cursor-not-allowed' : ''}">
+                            <span class="font-medium mr-2">${letter}.</span>
+                            ${option}
+                        </label>
+                    `;
+                    
+                    elements.optionsContainer.appendChild(optionElement);
+                });
+            } else if (question.type === 'fill') {
+                // 填空题
+                const isAnswered = state.userAnswers[state.currentQuestionIndex] !== null;
+                const userAnswer = state.userAnswers[state.currentQuestionIndex] || '';
+                
+                const optionElement = document.createElement('div');
+                optionElement.className = 'p-4';
+                
+                optionElement.innerHTML = `
+                    <label class="block text-gray-700 mb-2">请输入答案：</label>
+                    <input type="text" id="fill-answer-${state.currentQuestionIndex}" 
+                        value="${userAnswer}"
+                        ${isAnswered ? 'disabled' : ''}
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${isAnswered ? 'border-gray-200 bg-gray-50' : 'border-gray-300 hover:border-primary'}"
+                        placeholder="请输入答案...">
+                `;
+                
+                elements.optionsContainer.appendChild(optionElement);
+            }
+            
+            // 更新按钮状态
+            buttons.prev.disabled = state.currentQuestionIndex === 0;
+            buttons.next.disabled = state.currentQuestionIndex === state.questions.length - 1;
+            
+            // 如果已经回答过，显示反馈
+            if (state.userAnswers[state.currentQuestionIndex] !== null) {
+                showAnswerFeedback();
+            }
+            
+            // 如果是最后一题且已提交，显示提交按钮为完成
+            if (state.currentQuestionIndex === state.questions.length - 1 && 
+                state.userAnswers[state.currentQuestionIndex] !== null) {
+                buttons.submit.textContent = '完成练习';
+            } else {
+                buttons.submit.textContent = '提交答案';
+            }
+        }
+
+        // 渲染题目导航
+        function renderQuestionNavigation() {
+            elements.questionNav.innerHTML = '';
+            
+            state.questions.forEach((_, index) => {
+                const isCurrent = index === state.currentQuestionIndex;
+                const isAnswered = state.userAnswers[index] !== null;
+                const isCorrect = isAnswered && state.userAnswers[index] === state.questions[index].answer;
+                
+                const navItem = document.createElement('button');
+                navItem.className = `w-10 h-10 flex items-center justify-center rounded-full font-medium transition-all ${
+                    isCurrent ? 'bg-primary text-white border-primary' : 
+                    isAnswered ? (isCorrect ? 'bg-secondary/20 text-secondary border-secondary/30' : 'bg-danger/20 text-danger border-danger/30') : 
+                    'bg-gray-100 text-gray-600 border-gray-200'
+                } border`;
+                
+                navItem.textContent = index + 1;
+                navItem.addEventListener('click', () => {
+                    state.currentQuestionIndex = index;
+                    renderCurrentQuestion();
+                });
+                
+                elements.questionNav.appendChild(navItem);
+            });
+        }
+
+        // 渲染错题库
+        function renderWrongQuestions() {
+            elements.wrongQuestionsList.innerHTML = '';
+            
+            if (state.wrongQuestions.length === 0) {
+                elements.wrongQuestionsList.innerHTML = `
+                    <div class="text-center text-gray-500 py-12">
+                        <i class="fa fa-check-circle text-4xl mb-3 text-secondary"></i>
+                        <p>恭喜！你还没有错题记录</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            state.wrongQuestions.forEach((question, index) => {
+                const wrongItem = document.createElement('div');
+                wrongItem.className = 'border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow';
+                
+                wrongItem.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <h4 class="font-medium text-dark">${index + 1}. ${question.question}</h4>
+                        <span class="bg-danger/10 text-danger text-xs px-2 py-1 rounded-full">${getQuestionTypeName(question.type)}</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-2">你的答案：<span class="text-danger font-medium">${formatUserAnswer(question, state.userAnswers.find((_, i) => state.questions[i]?.id === question.id))}</span></p>
+                        <p class="text-sm text-gray-600">正确答案：<span class="text-secondary font-medium">${formatCorrectAnswer(question)}</span></p>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg text-sm">
+                        <p class="text-gray-700"><i class="fa fa-info-circle mr-1 text-primary"></i> ${question.explanation}</p>
+                    </div>
+                    
+                    <div class="mt-4 flex justify-end">
+                        <button class="text-primary text-sm hover:text-primary/80 transition-colors" onclick="reviewWrongQuestion(${index})">
+                            <i class="fa fa-pencil mr-1"></i> 练习此题
+                        </button>
+                    </div>
+                `;
+                
+                elements.wrongQuestionsList.appendChild(wrongItem);
+            });
+        }
+
+        // 查看单个错题
+        function reviewWrongQuestion(index) {
+            state.currentMode = 'wrong';
+            state.currentQuestionIndex = 0;
+            state.questions = [state.wrongQuestions[index]];
+            state.userAnswers = [null];
+            
+            showPracticePage();
+        }
+
+        // 更新进度
+        function updateProgress() {
+            elements.questionProgress.textContent = `${state.currentQuestionIndex + 1}/${state.questions.length}`;
+        }
+
+        // 提交答案
+        function submitAnswer() {
+            const question = state.questions[state.currentQuestionIndex];
+            let userAnswer = null;
+            
+            if (question.type === 'mcq' || question.type === 'tfq') {
+                // 选择题和判断题
+                const selectedOption = document.querySelector(`input[name="question-${state.currentQuestionIndex}"]:checked`);
+                if (!selectedOption) {
+                    alert('请选择一个选项！');
+                    return;
+                }
+                userAnswer = selectedOption.value;
+            } else if (question.type === 'fill') {
+                // 填空题
+                const inputElement = document.getElementById(`fill-answer-${state.currentQuestionIndex}`);
+                if (!inputElement.value.trim()) {
+                    alert('请输入答案！');
+                    return;
+                }
+                userAnswer = inputElement.value.trim();
+            }
+            
+            // 保存用户答案
+            state.userAnswers[state.currentQuestionIndex] = userAnswer;
+            
+            // 检查答案是否正确
+            const isCorrect = userAnswer === question.answer || 
+                             (question.type === 'fill' && userAnswer.toLowerCase() === question.answer.toLowerCase());
+            
+            // 如果答案错误，添加到错题库
+            if (!isCorrect && !state.wrongQuestions.some(q => q.id === question.id)) {
+                state.wrongQuestions.push(question);
+                saveWrongQuestions();
+                updateWrongCount();
+            }
+            
+            // 显示反馈
+            showAnswerFeedback();
+            
+            // 更新题目导航
+            renderQuestionNavigation();
+            
+            // 如果是最后一题，显示结果页面
+            if (state.currentQuestionIndex === state.questions.length - 1) {
+                buttons.submit.textContent = '完成练习';
+                buttons.submit.onclick = showResultPage;
+            }
+        }
+
+        // 显示答案反馈
+        function showAnswerFeedback() {
+            const question = state.questions[state.currentQuestionIndex];
+            const userAnswer = state.userAnswers[state.currentQuestionIndex];
+            const isCorrect = userAnswer === question.answer || 
+                             (question.type === 'fill' && userAnswer.toLowerCase() === question.answer.toLowerCase());
+            
+            elements.answerFeedback.classList.remove('hidden');
+            
+            if (isCorrect) {
+                elements.feedbackIcon.className = 'w-10 h-10 rounded-full bg-secondary/20 text-secondary flex items-center justify-center mb-3';
+                elements.feedbackIcon.innerHTML = '<i class="fa fa-check"></i>';
+                elements.feedbackText.className = 'font-medium text-secondary mb-2';
+                elements.feedbackText.textContent = '回答正确！';
+            } else {
+                elements.feedbackIcon.className = 'w-10 h-10 rounded-full bg-danger/20 text-danger flex items-center justify-center mb-3';
+                elements.feedbackIcon.innerHTML = '<i class="fa fa-times"></i>';
+                elements.feedbackText.className = 'font-medium text-danger mb-2';
+                elements.feedbackText.textContent = '回答错误！';
+            }
+            
+            elements.explanationText.textContent = question.explanation;
+            
+            // 如果是选择题或判断题，高亮显示正确答案
+            if (question.type === 'mcq' || question.type === 'tfq') {
+                const options = document.querySelectorAll(`input[name="question-${state.currentQuestionIndex}"]`);
+                options.forEach(option => {
+                    const label = option.nextElementSibling;
+                    const parentDiv = label.parentElement;
+                    
+                    // 移除之前的样式
+                    parentDiv.classList.remove('border-primary', 'bg-primary/5', 'border-secondary', 'bg-secondary/5', 'border-danger', 'bg-danger/5');
+                    
+                    // 高亮正确答案
+                    if (option.value === question.answer) {
+                        parentDiv.classList.add('border-secondary', 'bg-secondary/5');
+                    } 
+                    // 高亮用户选择的错误答案
+                    else if (option.checked && option.value !== question.answer) {
+                        parentDiv.classList.add('border-danger', 'bg-danger/5');
+                    }
+                });
+            } else if (question.type === 'fill') {
+                const inputElement = document.getElementById(`fill-answer-${state.currentQuestionIndex}`);
+                if (isCorrect) {
+                    inputElement.classList.add('border-secondary', 'bg-secondary/5');
+                } else {
+                    inputElement.classList.add('border-danger', 'bg-danger/5');
+                }
+            }
+        }
+
+        // 上一题
+        function goToPrevQuestion() {
+            if (state.currentQuestionIndex > 0) {
+                state.currentQuestionIndex--;
+                renderCurrentQuestion();
+                updateProgress();
+            }
+        }
+
+        // 下一题
+        function goToNextQuestion() {
+            if (state.currentQuestionIndex < state.questions.length - 1) {
+                state.currentQuestionIndex++;
+                renderCurrentQuestion();
+                updateProgress();
+            }
+        }
+
+        // 重新开始练习
+        function restartPractice() {
+            startPractice(state.currentMode);
+        }
+
+        // 开始考试计时器
+        function startExamTimer() {
+            if (state.currentMode !== 'exam') return;
+            
+            elements.timer.classList.remove('hidden');
+            
+            let timeLeft = state.timeLimit;
+            updateTimerDisplay(timeLeft);
+            
+            state.timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay(timeLeft);
+                
+                if (timeLeft <= 0) {
+                    clearInterval(state.timerInterval);
+                    alert('考试时间已结束！');
+                    showResultPage();
+                }
+            }, 1000);
+        }
+
+        // 更新计时器显示
+        function updateTimerDisplay(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            elements.timeRemaining.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            
+            // 当剩余时间少于10分钟时，显示为橙色
+            if (seconds < 600) {
+                elements.timeRemaining.classList.add('text-warning');
+                elements.timeRemaining.classList.remove('text-gray-600');
+            }
+            
+            // 当剩余时间少于1分钟时，显示为红色并闪烁
+            if (seconds < 60) {
+                elements.timeRemaining.classList.add('text-danger');
+                elements.timeRemaining.classList.remove('text-warning');
+                
+                if (Math.floor(seconds) % 2 === 0) {
+                    elements.timeRemaining.classList.add('opacity-50');
+                } else {
+                    elements.timeRemaining.classList.remove('opacity-50');
+                }
+            }
+        }
+
+        // 更新错题库数量
+        function updateWrongCount() {
+            elements.wrongCount.textContent = state.wrongQuestions.length;
+            document.getElementById('wrongCountStats').textContent = state.wrongQuestions.length;
+        }
+
+        // 清空错题库
+        function clearWrongQuestions() {
+            if (confirm('确定要清空所有错题记录吗？')) {
+                state.wrongQuestions = [];
+                saveWrongQuestions();
+                updateWrongCount();
+                renderWrongQuestions();
+            }
+        }
+
+        // 保存错题库到本地存储
+        function saveWrongQuestions() {
+            localStorage.setItem('wrongQuestions', JSON.stringify(state.wrongQuestions));
+        }
+
+        // 保存练习记录
+        function savePracticeRecord(score) {
+            const records = JSON.parse(localStorage.getItem('practiceRecords') || '[]');
+            const newRecord = {
+                date: new Date().toISOString().split('T')[0],
+                score: score,
+                mode: 'exam'
+            };
+            
+            // 最多保存5条记录
+            if (records.length >= 5) {
+                records.pop();
+            }
+            
+            records.unshift(newRecord);
+            localStorage.setItem('practiceRecords', JSON.stringify(records));
+        }
+
+        // 更新统计信息
+        function updateStats() {
+            // 总练习次数
+            const records = JSON.parse(localStorage.getItem('practiceRecords') || '[]');
+            document.getElementById('totalPracticeCount').textContent = records.length;
+            
+            // 正确率
+            const correctCount = state.userAnswers.filter((answer, index) => {
+                return answer === state.questions[index]?.answer;
+            }).length;
+            
+            const totalAnswered = state.userAnswers.filter(answer => answer !== null).length;
+            const correctRate = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
+            
+            document.getElementById('correctRate').textContent = `${correctRate}%`;
+            
+            // 题型正确率
+            updateTypeStats('mcq', '选择题');
+            updateTypeStats('tfq', '判断题');
+            updateTypeStats('fill', '填空题');
+        }
+
+        // 更新特定题型的统计信息
+        function updateTypeStats(type, typeName) {
+            const typeQuestions = state.questions.filter(q => q.type === type);
+            if (typeQuestions.length === 0) {
+                document.getElementById(`${type}Rate`).textContent = '0%';
+                document.getElementById(`${type}RateBar`).style.width = '0%';
+                return;
+            }
+            
+            const correctCount = typeQuestions.filter((q, index) => {
+                const questionIndex = state.questions.findIndex(q => q.id === typeQuestions[index].id);
+                return state.userAnswers[questionIndex] === q.answer;
+            }).length;
+            
+            const rate = Math.round((correctCount / typeQuestions.length) * 100);
+            document.getElementById(`${type}Rate`).textContent = `${rate}%`;
+            document.getElementById(`${type}RateBar`).style.width = `${rate}%`;
+        }
+
+        // 格式化用户答案显示
+        function formatUserAnswer(question, userAnswer) {
+            if (userAnswer === null) return '未作答';
+            
+            if (question.type === 'mcq' || question.type === 'tfq') {
+                const index = userAnswer.charCodeAt(0) - 65;
+                return question.options[index] || userAnswer;
+            }
+            
+            return userAnswer;
+        }
+
+        // 格式化正确答案显示
+        function formatCorrectAnswer(question) {
+            if (question.type === 'mcq' || question.type === 'tfq') {
+                const index = question.answer.charCodeAt(0) - 65;
+                return question.options[index] || question.answer;
+            }
+            
+            return question.answer;
+        }
+
+        // 获取题型名称
+        function getQuestionTypeName(type) {
+            switch (type) {
+                case 'mcq': return '选择题';
+                case 'tfq': return '判断题';
+                case 'fill': return '填空题';
+                default: return '未知题型';
+            }
+        }
+
+        // 初始化应用
+        initApp();
+    </script>
+</body>
+</html>
