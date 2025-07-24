@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,12 +27,14 @@
             .content-auto {
                 content-visibility: auto;
             }
+
             .btn-hover {
                 @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5;
             }
         }
     </style>
 </head>
+
 <body class="bg-gray-50 min-h-screen">
     <div class="container mx-auto px-4 py-8 max-w-5xl">
         <!-- 导航栏 -->
@@ -53,7 +56,7 @@
                 </button>
             </div>
         </nav>
-        
+
         <!-- 主内容区 -->
         <main>
             <!-- 欢迎页面 -->
@@ -67,7 +70,7 @@
                         <p class="text-gray-600 max-w-2xl mx-auto mb-6">
                             本题库包含《一级技师理论题库--电工2025》全部题目，助力考试备考
                         </p>
-                        
+
                         <!-- 题库总数量显示 -->
                         <div class="inline-flex items-center bg-gray-50 px-4 py-2 rounded-lg text-gray-700 mb-6">
                             <i class="fa fa-list-alt text-primary mr-2"></i>
@@ -86,23 +89,26 @@
                             <span>综合题：10道</span>
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm btn-hover cursor-pointer" onclick="startPractice('normal')">
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm btn-hover cursor-pointer"
+                            onclick="startPractice('normal')">
                             <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                                 <i class="fa fa-pencil text-primary text-xl"></i>
                             </div>
                             <h3 class="text-xl font-semibold text-dark mb-2">常规练习</h3>
                             <p class="text-gray-600">按顺序练习所有题目，随时查看解析</p>
                         </div>
-                        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm btn-hover cursor-pointer" onclick="startPractice('exam')">
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm btn-hover cursor-pointer"
+                            onclick="startPractice('exam')">
                             <div class="w-12 h-12 rounded-full bg-warning/10 flex items-center justify-center mb-4">
                                 <i class="fa fa-clock-o text-warning text-xl"></i>
                             </div>
                             <h3 class="text-xl font-semibold text-dark mb-2">模拟考试</h3>
-                            <p class="text-gray-600">随机抽取60道题，模拟真实考试环境</p>
+                            <p class="text-gray-600">随机抽取100道题，模拟真实考试环境</p>
                         </div>
-                        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm btn-hover cursor-pointer" id="wrongPracticeBtn">
+                        <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm btn-hover cursor-pointer"
+                            id="wrongPracticeBtn">
                             <div class="w-12 h-12 rounded-full bg-danger/10 flex items-center justify-center mb-4">
                                 <i class="fa fa-exclamation-triangle text-danger text-xl"></i>
                             </div>
@@ -112,13 +118,14 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- 练习页面 -->
             <div id="practicePage" class="hidden">
                 <div class="bg-white rounded-xl shadow-md p-6 mb-6">
                     <div class="flex justify-between items-center mb-6">
                         <div>
-                            <span id="currentMode" class="inline-block bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full">常规练习</span>
+                            <span id="currentMode"
+                                class="inline-block bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full">常规练习</span>
                             <span id="questionProgress" class="ml-4 text-gray-600">1/370</span>
                         </div>
                         <div id="timer" class="hidden text-gray-600">
@@ -127,7 +134,7 @@
                     </div>
                     <div id="questionContainer" class="mb-8">
                         <h3 id="questionText" class="text-xl font-semibold text-dark mb-6">题目将在这里显示</h3>
-                        
+
                         <div id="optionsContainer" class="space-y-4 mb-8">
                             <!-- 选项将通过JS动态生成 -->
                         </div>
@@ -138,13 +145,16 @@
                         </div>
                     </div>
                     <div class="flex justify-between">
-                        <button id="prevBtn" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button id="prevBtn"
+                            class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                             <i class="fa fa-arrow-left mr-1"></i> 上一题
                         </button>
-                        <button id="submitBtn" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors btn-hover">
+                        <button id="submitBtn"
+                            class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors btn-hover">
                             提交答案
                         </button>
-                        <button id="nextBtn" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <button id="nextBtn"
+                            class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                             下一题 <i class="fa fa-arrow-right ml-1"></i>
                         </button>
                     </div>
@@ -156,7 +166,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- 结果页面 -->
             <div id="resultPage" class="hidden">
                 <div class="bg-white rounded-xl shadow-md p-8 text-center">
@@ -165,7 +175,7 @@
                     </div>
                     <h2 id="resultTitle" class="text-2xl font-bold text-dark mb-2"></h2>
                     <p id="resultScore" class="text-4xl font-bold text-primary mb-6"></p>
-                    
+
                     <div class="max-w-md mx-auto mb-8">
                         <div class="grid grid-cols-3 gap-4">
                             <div class="bg-gray-50 rounded-lg p-4">
@@ -182,21 +192,24 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button id="reviewBtn" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors btn-hover">
+                        <button id="reviewBtn"
+                            class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors btn-hover">
                             <i class="fa fa-book mr-1"></i> 查看错题
                         </button>
-                        <button id="restartBtn" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors btn-hover">
+                        <button id="restartBtn"
+                            class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors btn-hover">
                             <i class="fa fa-refresh mr-1"></i> 重新练习
                         </button>
-                        <button id="homeFromResultBtn" class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors btn-hover">
+                        <button id="homeFromResultBtn"
+                            class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors btn-hover">
                             <i class="fa fa-home mr-1"></i> 返回首页
                         </button>
                     </div>
                 </div>
             </div>
-            
+
             <!-- 错题库页面 -->
             <div id="wrongPage" class="hidden">
                 <div class="bg-white rounded-xl shadow-md p-6">
@@ -206,7 +219,7 @@
                             <i class="fa fa-trash mr-1"></i> 清空错题库
                         </button>
                     </div>
-                    
+
                     <div id="wrongQuestionsList" class="space-y-6">
                         <div class="text-center text-gray-500 py-12">
                             <i class="fa fa-check-circle text-4xl mb-3 text-secondary"></i>
@@ -215,12 +228,12 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- 统计页面 -->
             <div id="statsPage" class="hidden">
                 <div class="bg-white rounded-xl shadow-md p-6">
                     <h2 class="text-xl font-bold text-dark mb-6">学习统计</h2>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <div class="bg-primary/5 rounded-lg p-5">
                             <div class="flex justify-between items-start mb-2">
@@ -233,7 +246,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="bg-secondary/5 rounded-lg p-5">
                             <div class="flex justify-between items-start mb-2">
                                 <div>
@@ -245,7 +258,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="bg-danger/5 rounded-lg p-5">
                             <div class="flex justify-between items-start mb-2">
                                 <div>
@@ -258,7 +271,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-white rounded-lg border border-gray-200 p-5">
                             <h4 class="font-semibold text-dark mb-4">题型正确率</h4>
@@ -292,7 +305,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="bg-white rounded-lg border border-gray-200 p-5">
                             <h4 class="font-semibold text-dark mb-4">最近练习情况</h4>
                             <div id="practiceHistory" class="space-y-3">
@@ -1419,7 +1432,7 @@
                     '高压钠灯',
                     '金属卤化物灯',
                     '荧光灯',
-                    '白炽灯'                
+                    '白炽灯'
 	],
                 answer: 'D',
                 explanation: '白炽灯的显色指数最高，接近100，最接近自然光。'
@@ -3100,939 +3113,282 @@
                 answer: '电阻',
                 explanation: '直流电桥是精确测量电阻的仪器。'
             },
-
-            // 四、问答题（20道）
-            {
-                id: 341,
-                type: 'essay',
-                question: '三相异步电机造成匝间短路的原因是什么？',
-                answer: `1）在安装过程中线圈绝缘碰破、磨损。
-2）运行中，长期高温运行，绝缘老化。
-3）使用中严重过负荷运行。`,
-                explanation: '这些是导致三相异步电机匝间短路的主要原因。'
-            },
-            {
-                id: 342,
-                type: 'essay',
-                question: '如何查找电机过载的主要原因？',
-                answer: `机械方面：1）负载过大2）轴联结不平衡，轴心不对称3）电机通风有故障
-电气方面：1）电机容量过小2）电机、定子、转子、铁芯摩擦3)绕组绝缘表层灰尘油污多，影响散热。`,
-                explanation: '电机过载需从机械和电气两方面排查原因。'
-            },
-            {
-                id: 343,
-                type: 'essay',
-                question: '何为变压器的同名端？',
-                answer: '在某一瞬间，一次绕组的某一电位为正时，二次绕组也必然同时有一个电位正的对应端,这两个对应端叫同名端，也叫同级性端。',
-                explanation: '同名端是变压器绕组极性的重要概念。'
-            },
-            {
-                id: 344,
-                type: 'essay',
-                question: '变压器的允许温度',
-                answer: '允许温度是指变压器运行时，各绝缘材料的上限破坏绝缘的温度。',
-                explanation: '变压器的允许温度由绝缘材料的等级决定。'
-            },
-            {
-                id: 345,
-                type: 'essay',
-                question: '什么叫减压起动？',
-                answer: '在电机启动时，将电压适当降低后再加到定子绕组上，起动后，再将电压恢复到额定电压，叫降压起动。',
-                explanation: '减压起动可降低电机的起动电流。'
-            },
-            {
-                id: 346,
-                type: 'essay',
-                question: '什么叫失压保护？',
-                answer: '运行中的设备，由于某种原因引起瞬时断电，在排除故障后恢复供电，该设备不能自行起动，用以保护人身安全和设施安全，这种保护措施就叫失压保护，或叫零压保护。',
-                explanation: '失压保护是保障设备和人身安全的重要措施。'
-            },
-            {
-                id: 347,
-                type: 'essay',
-                question: '电气照明的基本要求是什么？',
-                answer: `1）照度达到标准 
-2）空间亮度分布合理，无光污视觉环境
-3）安全、经济、美观，便于安装及维修`,
-                explanation: '这些是电气照明设计的基本准则。'
-            },
-            {
-                id: 348,
-                type: 'essay',
-                question: '用万用表判断晶体二极管极性的原理是什么？',
-                answer: '是用二极管的单向性即正向电阻小（通）反向电阻大（截止）的原理。',
-                explanation: '这是利用二极管单向导电性判断极性的方法。'
-            },
-            {
-                id: 349,
-                type: 'essay',
-                question: '保证安全的技术措施有那些？',
-                answer: '1）停电；2）验电；3）装设接地线；4）悬挂标示牌和装设遮栏。',
-                explanation: '这些是电气安全工作的基本技术措施。'
-            },
-            {
-                id: 350,
-                type: 'essay',
-                question: '什么叫交流电机额定功率？',
-                answer: '是指电机在额定工作状态运行时，轴上允许输出的机械功率。',
-                explanation: '额定功率是电机的重要参数之一。'
-            },
-            {
-                id: 351,
-                type: 'essay',
-                question: '什么是空气断路器 （自动开关）？',
-                answer: '是用手动（或电动）合闸，用锁扣保持合闸位置，由脱扣机构作用于跳闸并具有灭弧装置的低压开关，当电路内发生过负荷. 短路. 电压降低或消失时，能自动切断电路。',
-                explanation: '空气断路器是低压配电系统中的重要保护电器。'
-            },
-            {
-                id: 352,
-                type: 'essay',
-                question: '什么是三相交流电？',
-                answer: '由三个频率相同、电势振幅相等、相位差互差 120 °角的交流电路组成的电力系统，叫三相交流电。',
-                explanation: '这是三相交流电的基本定义。'
-            },
-            {
-                id: 353,
-                type: 'essay',
-                question: '为什么电缆线路停电后用验电笔验电时，短时间内还有电？',
-                answer: '电缆线路相当于一个电容器，停电后线路还存有剩余电荷，对地仍然有电位差。若停电立即验电，验电笔会显示出线路有电。因此必须经过充分放电，验电无电后，方可装设接地线。',
-                explanation: '这是由电缆的电容特性决定的。'
-            },
-            {
-                id: 354,
-                type: 'essay',
-                question: '使用电流、电压表应注意什么问题？',
-                answer: `1）电流表必须与负载串联，电压表必须与被测电压并联。2）应根据被测量值的大小，选择适当的量程。3）对于磁电系仪表，使用时要注意端子极性。4）测量前，要弄清楚被测电流或电压的性质和波形，选择合适的仪表。`,
-                explanation: '正确使用电流、电压表是保证测量 accuracy 和安全的前提。'
-            },
-            {
-                id: 355,
-                type: 'essay',
-                question: '导线联接的基本要求是什么？',
-                answer: `1）联接牢靠，接头电阻小，机械强度高；2）防止接头的电化腐蚀；3）绝缘性能好。`,
-                explanation: '这些是导线联接的基本要求。'
-            },
-            {
-                id: 356,
-                type: 'essay',
-                question: '电力拖动有哪几部分组成？',
-                answer: '电动机、控制设备、保护设备、电缆及机械传动装置',
-                explanation: '这是电力拖动系统的基本组成部分。'
-            },
-            {
-                id: 357,
-                type: 'essay',
-                question: '变压器油的作用是什么？',
-                answer: '散热和绝缘',
-                explanation: '变压器油是变压器的重要绝缘和冷却介质。'
-            },
-            {
-                id: 358,
-                type: 'essay',
-                question: '二极管的单向性是什么？',
-                answer: '正向导通，反向截止。',
-                explanation: '单向导电性是二极管的核心特性。'
-            },
-            {
-                id: 359,
-                type: 'essay',
-                question: '容量较大的交流接触器采用什么装置灭弧？',
-                answer: '1）真空灭弧     2）栅片灭弧',
-                explanation: '这些是大容量交流接触器常用的灭弧方式。'
-            },
-            {
-                id: 360,
-                type: 'essay',
-                question: '变压器空载运行时，为什么功率因数很低？',
-                answer: '因为空载时，电流的有功分量较小，而无功分量较大，所以功率因数就很小。',
-                explanation: '变压器空载时主要消耗无功功率，因此功率因数低。'
-            },
-
-            // 五、综合题（10道）
-            {
-                id: 361,
-                type: 'comprehensive',
-                question: '有一三角形连接的三相对称负载,每相具有电阻R=6Ω,感抗XL=6Ω,接在线电压为380V的电源上,则该三相负载的有功功率为______W、无功功率为______Var、视在功率为______VA。',
-                answer: '36130；36130；51090',
-                explanation: `每相阻抗Z=√(6²+6²)=6√2Ω，相电流Iₚ=Uₚ/Z=380/(6√2)≈36.3A，线电流Iₗ=√3Iₚ≈62.9A。
-有功功率P=3UₚIₚcosφ=3×380×36.3×(6/(6√2))≈36130W，
-无功功率Q=3UₚIₚsinφ=36130Var，
-视在功率S=√(P²+Q²)≈51090VA。`
-            },
-            {
-                id: 362,
-                type: 'comprehensive',
-                question: '某电容器的电容为C=31.9μF,接在频率为f=50HZ的电源上, 求电容器的容抗______Ω。',
-                answer: '100',
-                explanation: `容抗Xc=1/(2πfC)=1/(2×3.14×50×31.9×10⁻⁶)≈100Ω。`
-            },
-            {
-                id: 363,
-                type: 'comprehensive',
-                question: '频率f=100Hz的工频交流电,则它的周期等于______s。',
-                answer: '0.01',
-                explanation: `周期T=1/f=1/100=0.01s。`
-            },
-            {
-                id: 364,
-                type: 'comprehensive',
-                question: '三相负载接成星型,已知线电压有效值为380V,每相负载的阻抗为Z=22Ω。求：（1）相电压的有效值为______V；（2）相电流的有效值为______A；（3）线电流的有效值为______A。',
-                answer: '220；10；10',
-                explanation: `星型连接时，相电压Uₚ=Uₗ/√3=380/√3≈220V，
-相电流Iₚ=Uₚ/Z=220/22=10A，
-线电流Iₗ=Iₚ=10A。`
-            },
-            {
-                id: 365,
-                type: 'comprehensive',
-                question: '已知一个电阻R＝20Ω,当加上U＝6.3V电压时,电阻上的电流为______A。',
-                answer: '0.315',
-                explanation: `根据欧姆定律I=U/R=6.3/20=0.315A。`
-            },
-            {
-                id: 366,
-                type: 'comprehensive',
-                question: '一台三相异步电动机额定电流IN=22A，采用JR16型热继电器保护，要求整定电流为电动机额定电流的1.1倍。若热继电器刻度范围为0.8∼1.2IN，试确定实际整定值Iset范围为______A。',
-                answer: '19.8∼26.4',
-                explanation: `整定电流Iset=1.1×22=24.2A，在0.8×22=17.6A到1.2×22=26.4A范围内，实际整定值应为19.8∼26.4A。`
-            },
-            {
-                id: 367,
-                type: 'comprehensive',
-                question: '一电熨斗发热元件的电阻是R=30Ω,通入电流为I=3.5A,求其功率P为______W。',
-                answer: '367.5',
-                explanation: `功率P=I²R=3.5²×30=367.5W。`
-            },
-            {
-                id: 368,
-                type: 'comprehensive',
-                question: '欲使I=200mA的电流流过一个R=90Ω的电阻,则需要在该电阻的两端施加的电压等于______V。',
-                answer: '18',
-                explanation: `根据欧姆定律U=IR=0.2×90=18V。`
-            },
-            {
-                id: 369,
-                type: 'comprehensive',
-                question: '电阻R1和R2相并联,已知两端电压为U＝10V,总电流为I＝6A,两条支路电流之比为I1∶I2＝1∶2,则电阻R1为______Ω,R2为______Ω。',
-                answer: '5；2.5',
-                explanation: `I1=2A，I2=4A，
-R1=U/I1=10/2=5Ω，
-R2=U/I2=10/4=2.5Ω。`
-            },
-            {
-                id: 370,
-                type: 'comprehensive',
-                question: '某居民用户安装的是一只单相U=220V、I=5（20）A的电能表。则该用户同时使用的电器功率和为______W；若只接照明负载,可接80W的电灯______盏。（舍去小数取整）',
-                answer: '4400；55',
-                explanation: `最大功率P=UI=220×20=4400W，
-可接80W电灯数量=4400/80=55盏。`
-            }
         ];
 
-        // 剩余JavaScript代码与前文保持一致...
-        // （包括状态管理、DOM操作、事件绑定等功能代码）
- // 应用状态
-        const state = {
-            currentMode: 'normal', // normal, exam, wrong
-            currentQuestionIndex: 0,
-            questions: [],
-            userAnswers: [],
-            wrongQuestions: JSON.parse(localStorage.getItem('wrongQuestions') || '[]'),
-            startTime: null,
-            timerInterval: null,
-            timeLimit: 60 * 60 // 60分钟，单位：秒
-        };
+        let currentQuestionIndex = 0;
+        let currentMode = 'normal';
+        let selectedQuestions = [];
+        let userAnswers = [];
+        let wrongQuestions = [];
 
-        // DOM元素
-        const pages = {
-            welcome: document.getElementById('welcomePage'),
-            practice: document.getElementById('practicePage'),
-            wrong: document.getElementById('wrongPage'),
-            stats: document.getElementById('statsPage'),
-            result: document.getElementById('resultPage')
-        };
 
-        const buttons = {
-            home: document.getElementById('homeBtn'),
-            wrong: document.getElementById('wrongBtn'),
-            stats: document.getElementById('statsBtn'),
-            prev: document.getElementById('prevBtn'),
-            submit: document.getElementById('submitBtn'),
-            next: document.getElementById('nextBtn'),
-            homeFromResult: document.getElementById('homeFromResultBtn'),
-            restart: document.getElementById('restartBtn'),
-            review: document.getElementById('reviewBtn'),
-            wrongPractice: document.getElementById('wrongPracticeBtn'),
-            clearWrong: document.getElementById('clearWrongBtn')
-        };
+        // 初始化函数
+        function init() {
+            showWelcomePage();
+            // 绑定按钮事件
+            document.getElementById('homeBtn').addEventListener('click', showWelcomePage);
+            document.getElementById('wrongBtn').addEventListener('click', showWrongPage);
+            document.getElementById('statsBtn').addEventListener('click', showStatsPage);
+            document.getElementById('submitBtn').addEventListener('click', submitAnswer);
+            document.getElementById('prevBtn').addEventListener('click', prevQuestion);
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+            document.getElementById('reviewBtn').addEventListener('click', reviewWrongQuestions);
+            document.getElementById('restartBtn').addEventListener('click', restartPractice);
+            document.getElementById('homeFromResultBtn').addEventListener('click', showWelcomePage);
+            document.getElementById('clearWrongBtn').addEventListener('click', clearWrongQuestions);
+        }
 
-        const elements = {
-            currentMode: document.getElementById('currentMode'),
-            questionProgress: document.getElementById('questionProgress'),
-            timer: document.getElementById('timer'),
-            timeRemaining: document.getElementById('timeRemaining'),
-            questionText: document.getElementById('questionText'),
-            optionsContainer: document.getElementById('optionsContainer'),
-            answerFeedback: document.getElementById('answerFeedback'),
-            feedbackIcon: document.getElementById('feedbackIcon'),
-            feedbackText: document.getElementById('feedbackText'),
-            explanationText: document.getElementById('explanationText'),
-            questionNav: document.getElementById('questionNav'),
-            wrongCount: document.getElementById('wrongCount'),
-            wrongQuestionsList: document.getElementById('wrongQuestionsList'),
-            resultIcon: document.getElementById('resultIcon'),
-            resultTitle: document.getElementById('resultTitle'),
-            resultScore: document.getElementById('resultScore'),
-            totalQuestions: document.getElementById('totalQuestions'),
-            correctAnswers: document.getElementById('correctAnswers'),
-            wrongAnswers: document.getElementById('wrongAnswers')
-        };
-
-        // 初始化应用
-        function initApp() {
-            updateWrongCount();
-            updateStats();
-            
-            // 绑定事件监听器
-            buttons.home.addEventListener('click', showWelcomePage);
-            buttons.wrong.addEventListener('click', showWrongPage);
-            buttons.stats.addEventListener('click', showStatsPage);
-            buttons.prev.addEventListener('click', goToPrevQuestion);
-            buttons.submit.addEventListener('click', submitAnswer);
-            buttons.next.addEventListener('click', goToNextQuestion);
-            buttons.homeFromResult.addEventListener('click', showWelcomePage);
-            buttons.restart.addEventListener('click', restartPractice);
-            buttons.review.addEventListener('click', showWrongPage);
-            buttons.wrongPractice.addEventListener('click', () => startPractice('wrong'));
-            buttons.clearWrong.addEventListener('click', clearWrongQuestions);
+        // 开始练习函数
+        function startPractice(mode) {
+            currentMode = mode;
+            if (mode === 'normal') {
+                selectedQuestions = questionBank;
+            } else if (mode === 'exam') {
+                selectedQuestions = getRandomQuestions(100);
+            } else if (mode === 'wrong') {
+                selectedQuestions = wrongQuestions;
+            }
+            userAnswers = new Array(selectedQuestions.length).fill(null);
+            currentQuestionIndex = 0;
+            showPracticePage();
+            displayQuestion();
         }
 
         // 显示欢迎页面
         function showWelcomePage() {
-            hideAllPages();
-            pages.welcome.classList.remove('hidden');
+            document.getElementById('welcomePage').classList.remove('hidden');
+            document.getElementById('practicePage').classList.add('hidden');
+            document.getElementById('resultPage').classList.add('hidden');
+            document.getElementById('wrongPage').classList.add('hidden');
+            document.getElementById('statsPage').classList.add('hidden');
         }
 
         // 显示练习页面
         function showPracticePage() {
-            hideAllPages();
-            pages.practice.classList.remove('hidden');
-            renderCurrentQuestion();
-            renderQuestionNavigation();
-            
-            // 设置当前模式显示
-            if (state.currentMode === 'exam') {
-                elements.currentMode.textContent = '模拟考试';
-                elements.currentMode.className = 'inline-block bg-warning/10 text-warning text-sm font-medium px-3 py-1 rounded-full';
-                startExamTimer();
-            } else if (state.currentMode === 'wrong') {
-                elements.currentMode.textContent = '错题练习';
-                elements.currentMode.className = 'inline-block bg-danger/10 text-danger text-sm font-medium px-3 py-1 rounded-full';
-            } else {
-                elements.currentMode.textContent = '常规练习';
-                elements.currentMode.className = 'inline-block bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full';
-            }
-            
-            // 更新进度
-            updateProgress();
-        }
-
-        // 显示错题库页面
-        function showWrongPage() {
-            hideAllPages();
-            pages.wrong.classList.remove('hidden');
-            renderWrongQuestions();
-        }
-
-        // 显示统计页面
-        function showStatsPage() {
-            hideAllPages();
-            pages.stats.classList.remove('hidden');
-            updateStats();
+            document.getElementById('welcomePage').classList.add('hidden');
+            document.getElementById('practicePage').classList.remove('hidden');
+            document.getElementById('resultPage').classList.add('hidden');
+            document.getElementById('wrongPage').classList.add('hidden');
+            document.getElementById('statsPage').classList.add('hidden');
         }
 
         // 显示结果页面
         function showResultPage() {
-            hideAllPages();
-            pages.result.classList.remove('hidden');
-            
-            // 计算得分
-            const correctCount = state.userAnswers.filter((answer, index) => {
-                return answer === state.questions[index].answer;
+            document.getElementById('welcomePage').classList.add('hidden');
+            document.getElementById('practicePage').classList.add('hidden');
+            document.getElementById('resultPage').classList.remove('hidden');
+            document.getElementById('wrongPage').classList.add('hidden');
+            document.getElementById('statsPage').classList.add('hidden');
+
+            const correctCount = userAnswers.filter((answer, index) => {
+                return answer === selectedQuestions[index].answer;
             }).length;
-            
-            const totalCount = state.questions.length;
-            const score = Math.round((correctCount / totalCount) * 100);
-            
-            // 更新结果显示
-            elements.totalQuestions.textContent = totalCount;
-            elements.correctAnswers.textContent = correctCount;
-            elements.wrongAnswers.textContent = totalCount - correctCount;
-            elements.resultScore.textContent = `${score}分`;
-            
-            // 根据得分显示不同的结果
-            if (score >= 90) {
-                elements.resultIcon.className = 'inline-flex items-center justify-center w-24 h-24 rounded-full bg-secondary/20 text-secondary mb-6';
-                elements.resultIcon.querySelector('i').className = 'fa fa-trophy text-5xl';
-                elements.resultTitle.textContent = '太棒了！';
-            } else if (score >= 60) {
-                elements.resultIcon.className = 'inline-flex items-center justify-center w-24 h-24 rounded-full bg-primary/20 text-primary mb-6';
-                elements.resultIcon.querySelector('i').className = 'fa fa-check-circle text-5xl';
-                elements.resultTitle.textContent = '做得不错！';
+            const wrongCount = selectedQuestions.length - correctCount;
+            const score = (correctCount / selectedQuestions.length * 100).toFixed(2);
+
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultScore = document.getElementById('resultScore');
+            const totalQuestions = document.getElementById('totalQuestions');
+            const correctAnswers = document.getElementById('correctAnswers');
+            const wrongAnswers = document.getElementById('wrongAnswers');
+
+            if (score >= 60) {
+                resultIcon.innerHTML = '<i class="fa fa-check-circle text-secondary"></i>';
+                resultTitle.textContent = '恭喜！你通过了测试';
             } else {
-                elements.resultIcon.className = 'inline-flex items-center justify-center w-24 h-24 rounded-full bg-danger/20 text-danger mb-6';
-                elements.resultIcon.querySelector('i').className = 'fa fa-exclamation-circle text-5xl';
-                elements.resultTitle.textContent = '继续努力！';
+                resultIcon.innerHTML = '<i class="fa fa-exclamation-triangle text-danger"></i>';
+                resultTitle.textContent = '很遗憾，你未通过测试';
             }
-            
-            // 如果是模拟考试，保存记录
-            if (state.currentMode === 'exam') {
-                savePracticeRecord(score);
-            }
-            
-            // 更新统计信息
-            updateStats();
-        }
+            resultScore.textContent = `${score}分`;
+            totalQuestions.textContent = selectedQuestions.length;
+            correctAnswers.textContent = correctCount;
+            wrongAnswers.textContent = wrongCount;
 
-        // 隐藏所有页面
-        function hideAllPages() {
-            Object.values(pages).forEach(page => {
-                page.classList.add('hidden');
+            // 更新错题库
+            wrongQuestions = selectedQuestions.filter((question, index) => {
+                return userAnswers[index] !== question.answer;
             });
-            
-            // 停止计时器
-            if (state.timerInterval) {
-                clearInterval(state.timerInterval);
-                state.timerInterval = null;
-            }
+            document.getElementById('wrongCount').textContent = wrongQuestions.length;
         }
 
-        // 开始练习
-function startPractice(mode) {
-    state.currentMode = mode;
-    state.currentQuestionIndex = 0;
-    
-    if (mode === 'wrong') {
-        // 错题练习模式（保持不变）
-        if (state.wrongQuestions.length === 0) {
-            alert('你的错题库为空！');
-            return;
-        }
-        state.questions = [...state.wrongQuestions];
-    } else if (mode === 'normal') {
-        // 常规练习模式：随机抽取100道题（针对电工2025题库的修改）
-        // 1. 对《一级技师理论题库--电工2025.docx》的370道题进行随机排序
-        const shuffledQuestions = [...questionBank].sort(() => Math.random() - 0.5);
-        // 2. 抽取前100道题（题库总数370道，满足抽取需求）
-        state.questions = shuffledQuestions.slice(0, 100);
-    } else if (mode === 'exam') {
-        // 模拟考试模式（保持不变）
-        const shuffledQuestions = [...questionBank].sort(() => Math.random() - 0.5);
-        state.questions = shuffledQuestions.slice(0, 60);
-    }
-    
-    state.userAnswers = new Array(state.questions.length).fill(null);
-    showPracticePage();
-}
+        // 显示错题库页面
+        function showWrongPage() {
+            document.getElementById('welcomePage').classList.add('hidden');
+            document.getElementById('practicePage').classList.add('hidden');
+            document.getElementById('resultPage').classList.add('hidden');
+            document.getElementById('wrongPage').classList.remove('hidden');
+            document.getElementById('statsPage').classList.add('hidden');
 
-function startPractice(mode) {
-    state.currentMode = mode;
-    state.currentQuestionIndex = 0;
-    
-    if (mode === 'wrong') {
-        // 错题练习模式（保持不变）
-        if (state.wrongQuestions.length === 0) {
-            alert('你的错题库为空！');
-            return;
-        }
-        state.questions = [...state.wrongQuestions];
-    } else if (mode === 'normal') {
-        // 常规练习模式：随机抽取100道题（针对电工2025题库的修改）
-        // 1. 对《一级技师理论题库--电工2025.docx》的370道题进行随机排序
-        const shuffledQuestions = [...questionBank].sort(() => Math.random() - 0.5);
-        // 2. 抽取前100道题（题库总数370道，满足抽取需求）
-        state.questions = shuffledQuestions.slice(0, 100);
-    } else if (mode === 'exam') {
-        // 模拟考试模式（保持不变）
-        const shuffledQuestions = [...questionBank].sort(() => Math.random() - 0.5);
-        state.questions = shuffledQuestions.slice(0, 60);
-    }
-    
-    state.userAnswers = new Array(state.questions.length).fill(null);
-    showPracticePage();
-}
+            const wrongQuestionsList = document.getElementById('wrongQuestionsList');
+            wrongQuestionsList.innerHTML = '';
 
-        // 渲染当前题目
-        function renderCurrentQuestion() {
-            const question = state.questions[state.currentQuestionIndex];
-            if (!question) return;
-            
-            // 更新题目文本
-            elements.questionText.textContent = `${state.currentQuestionIndex + 1}. ${question.question}`;
-            
-            // 清空选项容器和反馈
-            elements.optionsContainer.innerHTML = '';
-            elements.answerFeedback.classList.add('hidden');
-            
-            // 根据题目类型渲染选项
-            if (question.type === 'mcq') {
-                // 选择题
-                question.options.forEach((option, index) => {
-                    const letter = String.fromCharCode(65 + index); // A, B, C, D
-                    const isAnswered = state.userAnswers[state.currentQuestionIndex] !== null;
-                    const isSelected = state.userAnswers[state.currentQuestionIndex] === letter;
-                    
-                    const optionElement = document.createElement('div');
-                    optionElement.className = `flex items-start p-4 border rounded-lg transition-all ${isAnswered ? (isSelected ? 'border-primary bg-primary/5' : 'border-gray-200') : 'border-gray-200 hover:border-primary hover:bg-primary/5'}`;
-                    
-                    const inputId = `option-${state.currentQuestionIndex}-${letter}`;
-                    
-                    optionElement.innerHTML = `
-                        <input type="radio" id="${inputId}" name="question-${state.currentQuestionIndex}" value="${letter}" 
-                            ${isSelected ? 'checked' : ''}
-                            ${isAnswered ? 'disabled' : ''}
-                            class="mt-1 mr-3 accent-primary">
-                        <label for="${inputId}" class="cursor-pointer ${isAnswered ? 'cursor-not-allowed' : ''}">
-                            <span class="font-medium mr-2">${letter}.</span>
-                            ${option}
-                        </label>
-                    `;
-                    
-                    elements.optionsContainer.appendChild(optionElement);
-                });
-            } else if (question.type === 'tfq') {
-                // 判断题
-                ['正确', '错误'].forEach((option, index) => {
-                    const letter = index === 0 ? 'A' : 'B';
-                    const isAnswered = state.userAnswers[state.currentQuestionIndex] !== null;
-                    const isSelected = state.userAnswers[state.currentQuestionIndex] === letter;
-                    
-                    const optionElement = document.createElement('div');
-                    optionElement.className = `flex items-start p-4 border rounded-lg transition-all ${isAnswered ? (isSelected ? 'border-primary bg-primary/5' : 'border-gray-200') : 'border-gray-200 hover:border-primary hover:bg-primary/5'}`;
-                    
-                    const inputId = `option-${state.currentQuestionIndex}-${letter}`;
-                    
-                    optionElement.innerHTML = `
-                        <input type="radio" id="${inputId}" name="question-${state.currentQuestionIndex}" value="${letter}" 
-                            ${isSelected ? 'checked' : ''}
-                            ${isAnswered ? 'disabled' : ''}
-                            class="mt-1 mr-3 accent-primary">
-                        <label for="${inputId}" class="cursor-pointer ${isAnswered ? 'cursor-not-allowed' : ''}">
-                            <span class="font-medium mr-2">${letter}.</span>
-                            ${option}
-                        </label>
-                    `;
-                    
-                    elements.optionsContainer.appendChild(optionElement);
-                });
-            } else if (question.type === 'fill') {
-                // 填空题
-                const isAnswered = state.userAnswers[state.currentQuestionIndex] !== null;
-                const userAnswer = state.userAnswers[state.currentQuestionIndex] || '';
-                
-                const optionElement = document.createElement('div');
-                optionElement.className = 'p-4';
-                
-                optionElement.innerHTML = `
-                    <label class="block text-gray-700 mb-2">请输入答案：</label>
-                    <input type="text" id="fill-answer-${state.currentQuestionIndex}" 
-                        value="${userAnswer}"
-                        ${isAnswered ? 'disabled' : ''}
-                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 ${isAnswered ? 'border-gray-200 bg-gray-50' : 'border-gray-300 hover:border-primary'}"
-                        placeholder="请输入答案...">
-                `;
-                
-                elements.optionsContainer.appendChild(optionElement);
-            }
-            
-            // 更新按钮状态
-            buttons.prev.disabled = state.currentQuestionIndex === 0;
-            buttons.next.disabled = state.currentQuestionIndex === state.questions.length - 1;
-            
-            // 如果已经回答过，显示反馈
-            if (state.userAnswers[state.currentQuestionIndex] !== null) {
-                showAnswerFeedback();
-            }
-            
-            // 如果是最后一题且已提交，显示提交按钮为完成
-            if (state.currentQuestionIndex === state.questions.length - 1 && 
-                state.userAnswers[state.currentQuestionIndex] !== null) {
-                buttons.submit.textContent = '完成练习';
-            } else {
-                buttons.submit.textContent = '提交答案';
-            }
-        }
-
-        // 渲染题目导航
-        function renderQuestionNavigation() {
-            elements.questionNav.innerHTML = '';
-            
-            state.questions.forEach((_, index) => {
-                const isCurrent = index === state.currentQuestionIndex;
-                const isAnswered = state.userAnswers[index] !== null;
-                const isCorrect = isAnswered && state.userAnswers[index] === state.questions[index].answer;
-                
-                const navItem = document.createElement('button');
-                navItem.className = `w-10 h-10 flex items-center justify-center rounded-full font-medium transition-all ${
-                    isCurrent ? 'bg-primary text-white border-primary' : 
-                    isAnswered ? (isCorrect ? 'bg-secondary/20 text-secondary border-secondary/30' : 'bg-danger/20 text-danger border-danger/30') : 
-                    'bg-gray-100 text-gray-600 border-gray-200'
-                } border`;
-                
-                navItem.textContent = index + 1;
-                navItem.addEventListener('click', () => {
-                    state.currentQuestionIndex = index;
-                    renderCurrentQuestion();
-                });
-                
-                elements.questionNav.appendChild(navItem);
-            });
-        }
-
-        // 渲染错题库
-        function renderWrongQuestions() {
-            elements.wrongQuestionsList.innerHTML = '';
-            
-            if (state.wrongQuestions.length === 0) {
-                elements.wrongQuestionsList.innerHTML = `
+            if (wrongQuestions.length === 0) {
+                wrongQuestionsList.innerHTML = `
                     <div class="text-center text-gray-500 py-12">
                         <i class="fa fa-check-circle text-4xl mb-3 text-secondary"></i>
                         <p>恭喜！你还没有错题记录</p>
                     </div>
                 `;
-                return;
+            } else {
+                wrongQuestions.forEach((question, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.classList.add('border', 'border-gray-200', 'p-6', 'rounded-lg');
+                    questionDiv.innerHTML = `
+                        <h3 class="text-xl font-semibold text-dark mb-2">${question.question}</h3>
+                        <p class="text-gray-600 mb-2">你的答案: ${userAnswers[index]}</p>
+                        <p class="text-gray-600 mb-2">正确答案: ${question.answer}</p>
+                        <p class="text-gray-600">解析: ${question.explanation}</p>
+                    `;
+                    wrongQuestionsList.appendChild(questionDiv);
+                });
             }
-            
-            state.wrongQuestions.forEach((question, index) => {
-                const wrongItem = document.createElement('div');
-                wrongItem.className = 'border border-gray-200 rounded-lg p-5 hover:shadow-md transition-shadow';
-                
-                wrongItem.innerHTML = `
-                    <div class="flex justify-between items-start mb-3">
-                        <h4 class="font-medium text-dark">${index + 1}. ${question.question}</h4>
-                        <span class="bg-danger/10 text-danger text-xs px-2 py-1 rounded-full">${getQuestionTypeName(question.type)}</span>
-                    </div>
-                    
-                    <div class="mb-4">
-                        <p class="text-sm text-gray-600 mb-2">你的答案：<span class="text-danger font-medium">${formatUserAnswer(question, state.userAnswers.find((_, i) => state.questions[i]?.id === question.id))}</span></p>
-                        <p class="text-sm text-gray-600">正确答案：<span class="text-secondary font-medium">${formatCorrectAnswer(question)}</span></p>
-                    </div>
-                    
-                    <div class="bg-gray-50 p-3 rounded-lg text-sm">
-                        <p class="text-gray-700"><i class="fa fa-info-circle mr-1 text-primary"></i> ${question.explanation}</p>
-                    </div>
-                    
-                    <div class="mt-4 flex justify-end">
-                        <button class="text-primary text-sm hover:text-primary/80 transition-colors" onclick="reviewWrongQuestion(${index})">
-                            <i class="fa fa-pencil mr-1"></i> 练习此题
-                        </button>
-                    </div>
-                `;
-                
-                elements.wrongQuestionsList.appendChild(wrongItem);
-            });
         }
 
-        // 查看单个错题
-        function reviewWrongQuestion(index) {
-            state.currentMode = 'wrong';
-            state.currentQuestionIndex = 0;
-            state.questions = [state.wrongQuestions[index]];
-            state.userAnswers = [null];
-            
-            showPracticePage();
+        // 显示统计页面
+        function showStatsPage() {
+            document.getElementById('welcomePage').classList.add('hidden');
+            document.getElementById('practicePage').classList.add('hidden');
+            document.getElementById('resultPage').classList.add('hidden');
+            document.getElementById('wrongPage').classList.add('hidden');
+            document.getElementById('statsPage').classList.remove('hidden');
+
+            // 统计数据更新逻辑可以在这里添加
         }
 
-        // 更新进度
-        function updateProgress() {
-            elements.questionProgress.textContent = `${state.currentQuestionIndex + 1}/${state.questions.length}`;
+        // 显示问题
+        function displayQuestion() {
+            const question = selectedQuestions[currentQuestionIndex];
+            const questionText = document.getElementById('questionText');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const currentModeElement = document.getElementById('currentMode');
+            const questionProgress = document.getElementById('questionProgress');
+
+            currentModeElement.textContent = currentMode === 'normal' ? '常规练习' : '模拟考试';
+            questionProgress.textContent = `${currentQuestionIndex + 1}/${selectedQuestions.length}`;
+            questionText.textContent = question.question;
+
+            optionsContainer.innerHTML = '';
+
+            if (question.type === 'mcq' || question.type === 'tfq') {
+                question.options.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.classList.add('flex', 'items-center');
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = 'answer';
+                    input.id = `option${index}`;
+                    input.value = String.fromCharCode(65 + index);
+                    if (userAnswers[currentQuestionIndex] === input.value) {
+                        input.checked = true;
+                    }
+                    const label = document.createElement('label');
+                    label.htmlFor = `option${index}`;
+                    label.textContent = option;
+                    label.classList.add('ml-2');
+                    optionDiv.appendChild(input);
+                    optionDiv.appendChild(label);
+                    optionsContainer.appendChild(optionDiv);
+                });
+            } else if (question.type === 'fill') {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'fillAnswer';
+                input.value = userAnswers[currentQuestionIndex] || '';
+                optionsContainer.appendChild(input);
+            }
+
+            // 禁用/启用上一题和下一题按钮
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextBtn').disabled = currentQuestionIndex === selectedQuestions.length - 1;
         }
 
         // 提交答案
         function submitAnswer() {
-            const question = state.questions[state.currentQuestionIndex];
-            let userAnswer = null;
-            
-            if (question.type === 'mcq' || question.type === 'tfq') {
-                // 选择题和判断题
-                const selectedOption = document.querySelector(`input[name="question-${state.currentQuestionIndex}"]:checked`);
-                if (!selectedOption) {
-                    alert('请选择一个选项！');
-                    return;
-                }
-                userAnswer = selectedOption.value;
-            } else if (question.type === 'fill') {
-                // 填空题
-                const inputElement = document.getElementById(`fill-answer-${state.currentQuestionIndex}`);
-                if (!inputElement.value.trim()) {
-                    alert('请输入答案！');
-                    return;
-                }
-                userAnswer = inputElement.value.trim();
-            }
-            
-            // 保存用户答案
-            state.userAnswers[state.currentQuestionIndex] = userAnswer;
-            
-            // 检查答案是否正确
-            const isCorrect = userAnswer === question.answer || 
-                             (question.type === 'fill' && userAnswer.toLowerCase() === question.answer.toLowerCase());
-            
-            // 如果答案错误，添加到错题库
-            if (!isCorrect && !state.wrongQuestions.some(q => q.id === question.id)) {
-                state.wrongQuestions.push(question);
-                saveWrongQuestions();
-                updateWrongCount();
-            }
-            
-            // 显示反馈
-            showAnswerFeedback();
-            
-            // 更新题目导航
-            renderQuestionNavigation();
-            
-            // 如果是最后一题，显示结果页面
-            if (state.currentQuestionIndex === state.questions.length - 1) {
-                buttons.submit.textContent = '完成练习';
-                buttons.submit.onclick = showResultPage;
-            }
-        }
+            const question = selectedQuestions[currentQuestionIndex];
+            let userAnswer;
 
-        // 显示答案反馈
-        function showAnswerFeedback() {
-            const question = state.questions[state.currentQuestionIndex];
-            const userAnswer = state.userAnswers[state.currentQuestionIndex];
-            const isCorrect = userAnswer === question.answer || 
-                             (question.type === 'fill' && userAnswer.toLowerCase() === question.answer.toLowerCase());
-            
-            elements.answerFeedback.classList.remove('hidden');
-            
-            if (isCorrect) {
-                elements.feedbackIcon.className = 'w-10 h-10 rounded-full bg-secondary/20 text-secondary flex items-center justify-center mb-3';
-                elements.feedbackIcon.innerHTML = '<i class="fa fa-check"></i>';
-                elements.feedbackText.className = 'font-medium text-secondary mb-2';
-                elements.feedbackText.textContent = '回答正确！';
-            } else {
-                elements.feedbackIcon.className = 'w-10 h-10 rounded-full bg-danger/20 text-danger flex items-center justify-center mb-3';
-                elements.feedbackIcon.innerHTML = '<i class="fa fa-times"></i>';
-                elements.feedbackText.className = 'font-medium text-danger mb-2';
-                elements.feedbackText.textContent = '回答错误！';
-            }
-            
-            elements.explanationText.textContent = question.explanation;
-            
-            // 如果是选择题或判断题，高亮显示正确答案
             if (question.type === 'mcq' || question.type === 'tfq') {
-                const options = document.querySelectorAll(`input[name="question-${state.currentQuestionIndex}"]`);
-                options.forEach(option => {
-                    const label = option.nextElementSibling;
-                    const parentDiv = label.parentElement;
-                    
-                    // 移除之前的样式
-                    parentDiv.classList.remove('border-primary', 'bg-primary/5', 'border-secondary', 'bg-secondary/5', 'border-danger', 'bg-danger/5');
-                    
-                    // 高亮正确答案
-                    if (option.value === question.answer) {
-                        parentDiv.classList.add('border-secondary', 'bg-secondary/5');
-                    } 
-                    // 高亮用户选择的错误答案
-                    else if (option.checked && option.value !== question.answer) {
-                        parentDiv.classList.add('border-danger', 'bg-danger/5');
-                    }
-                });
+                const selectedOption = document.querySelector('input[name="answer"]:checked');
+                userAnswer = selectedOption ? selectedOption.value : null;
             } else if (question.type === 'fill') {
-                const inputElement = document.getElementById(`fill-answer-${state.currentQuestionIndex}`);
-                if (isCorrect) {
-                    inputElement.classList.add('border-secondary', 'bg-secondary/5');
-                } else {
-                    inputElement.classList.add('border-danger', 'bg-danger/5');
-                }
+                const fillInput = document.getElementById('fillAnswer');
+                userAnswer = fillInput ? fillInput.value.trim() : null;
+            }
+
+            userAnswers[currentQuestionIndex] = userAnswer;
+
+            const answerFeedback = document.getElementById('answerFeedback');
+            const feedbackIcon = document.getElementById('feedbackIcon');
+            const feedbackText = document.getElementById('feedbackText');
+            const explanationText = document.getElementById('explanationText');
+
+            if (userAnswer === question.answer) {
+                feedbackIcon.innerHTML = '<i class="fa fa-check-circle text-secondary text-2xl"></i>';
+                feedbackText.textContent = '回答正确';
+                feedbackText.classList.remove('text-danger');
+                feedbackText.classList.add('text-secondary');
+            } else {
+                feedbackIcon.innerHTML = '<i class="fa fa-exclamation-triangle text-danger text-2xl"></i>';
+                feedbackText.textContent = '回答错误';
+                feedbackText.classList.remove('text-secondary');
+                feedbackText.classList.add('text-danger');
+            }
+            explanationText.textContent = question.explanation;
+            answerFeedback.classList.remove('hidden');
+
+            // 如果是最后一题，显示结果页面
+            if (currentQuestionIndex === selectedQuestions.length - 1) {
+                showResultPage();
             }
         }
 
         // 上一题
-        function goToPrevQuestion() {
-            if (state.currentQuestionIndex > 0) {
-                state.currentQuestionIndex--;
-                renderCurrentQuestion();
-                updateProgress();
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+                const answerFeedback = document.getElementById('answerFeedback');
+                answerFeedback.classList.add('hidden');
             }
         }
 
         // 下一题
-        function goToNextQuestion() {
-            if (state.currentQuestionIndex < state.questions.length - 1) {
-                state.currentQuestionIndex++;
-                renderCurrentQuestion();
-                updateProgress();
+        function nextQuestion() {
+            if (currentQuestionIndex < selectedQuestions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+                const answerFeedback = document.getElementById('answerFeedback');
+                answerFeedback.classList.add('hidden');
             }
         }
 
-        // 重新开始练习
+        // 查看错题
+        function reviewWrongQuestions() {
+            startPractice('wrong');
+        }
+
+        // 重新练习
         function restartPractice() {
-            startPractice(state.currentMode);
-        }
-
-        // 开始考试计时器
-        function startExamTimer() {
-            if (state.currentMode !== 'exam') return;
-            
-            elements.timer.classList.remove('hidden');
-            
-            let timeLeft = state.timeLimit;
-            updateTimerDisplay(timeLeft);
-            
-            state.timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay(timeLeft);
-                
-                if (timeLeft <= 0) {
-                    clearInterval(state.timerInterval);
-                    alert('考试时间已结束！');
-                    showResultPage();
-                }
-            }, 1000);
-        }
-
-        // 更新计时器显示
-        function updateTimerDisplay(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            elements.timeRemaining.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-            
-            // 当剩余时间少于10分钟时，显示为橙色
-            if (seconds < 600) {
-                elements.timeRemaining.classList.add('text-warning');
-                elements.timeRemaining.classList.remove('text-gray-600');
-            }
-            
-            // 当剩余时间少于1分钟时，显示为红色并闪烁
-            if (seconds < 60) {
-                elements.timeRemaining.classList.add('text-danger');
-                elements.timeRemaining.classList.remove('text-warning');
-                
-                if (Math.floor(seconds) % 2 === 0) {
-                    elements.timeRemaining.classList.add('opacity-50');
-                } else {
-                    elements.timeRemaining.classList.remove('opacity-50');
-                }
-            }
-        }
-
-        // 更新错题库数量
-        function updateWrongCount() {
-            elements.wrongCount.textContent = state.wrongQuestions.length;
-            document.getElementById('wrongCountStats').textContent = state.wrongQuestions.length;
+            startPractice(currentMode);
         }
 
         // 清空错题库
         function clearWrongQuestions() {
-            if (confirm('确定要清空所有错题记录吗？')) {
-                state.wrongQuestions = [];
-                saveWrongQuestions();
-                updateWrongCount();
-                renderWrongQuestions();
-            }
+            wrongQuestions = [];
+            document.getElementById('wrongCount').textContent = '0';
+            showWrongPage();
         }
 
-        // 保存错题库到本地存储
-        function saveWrongQuestions() {
-            localStorage.setItem('wrongQuestions', JSON.stringify(state.wrongQuestions));
+        // 获取随机题目
+        function getRandomQuestions(count) {
+            const shuffled = questionBank.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
         }
 
-        // 保存练习记录
-        function savePracticeRecord(score) {
-            const records = JSON.parse(localStorage.getItem('practiceRecords') || '[]');
-            const newRecord = {
-                date: new Date().toISOString().split('T')[0],
-                score: score,
-                mode: 'exam'
-            };
-            
-            // 最多保存5条记录
-            if (records.length >= 5) {
-                records.pop();
-            }
-            
-            records.unshift(newRecord);
-            localStorage.setItem('practiceRecords', JSON.stringify(records));
-        }
-
-        // 更新统计信息
-        function updateStats() {
-            // 总练习次数
-            const records = JSON.parse(localStorage.getItem('practiceRecords') || '[]');
-            document.getElementById('totalPracticeCount').textContent = records.length;
-            
-            // 正确率
-            const correctCount = state.userAnswers.filter((answer, index) => {
-                return answer === state.questions[index]?.answer;
-            }).length;
-            
-            const totalAnswered = state.userAnswers.filter(answer => answer !== null).length;
-            const correctRate = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
-            
-            document.getElementById('correctRate').textContent = `${correctRate}%`;
-            
-            // 题型正确率
-            updateTypeStats('mcq', '选择题');
-            updateTypeStats('tfq', '判断题');
-            updateTypeStats('fill', '填空题');
-        }
-
-        // 更新特定题型的统计信息
-        function updateTypeStats(type, typeName) {
-            const typeQuestions = state.questions.filter(q => q.type === type);
-            if (typeQuestions.length === 0) {
-                document.getElementById(`${type}Rate`).textContent = '0%';
-                document.getElementById(`${type}RateBar`).style.width = '0%';
-                return;
-            }
-            
-            const correctCount = typeQuestions.filter((q, index) => {
-                const questionIndex = state.questions.findIndex(q => q.id === typeQuestions[index].id);
-                return state.userAnswers[questionIndex] === q.answer;
-            }).length;
-            
-            const rate = Math.round((correctCount / typeQuestions.length) * 100);
-            document.getElementById(`${type}Rate`).textContent = `${rate}%`;
-            document.getElementById(`${type}RateBar`).style.width = `${rate}%`;
-        }
-
-        // 格式化用户答案显示
-        function formatUserAnswer(question, userAnswer) {
-            if (userAnswer === null) return '未作答';
-            
-            if (question.type === 'mcq' || question.type === 'tfq') {
-                const index = userAnswer.charCodeAt(0) - 65;
-                return question.options[index] || userAnswer;
-            }
-            
-            return userAnswer;
-        }
-
-        // 格式化正确答案显示
-        function formatCorrectAnswer(question) {
-            if (question.type === 'mcq' || question.type === 'tfq') {
-                const index = question.answer.charCodeAt(0) - 65;
-                return question.options[index] || question.answer;
-            }
-            
-            return question.answer;
-        }
-
-        // 获取题型名称
-        function getQuestionTypeName(type) {
-            switch (type) {
-                case 'mcq': return '选择题';
-                case 'tfq': return '判断题';
-                case 'fill': return '填空题';
-                default: return '未知题型';
-            }
-        }
-
-        // 初始化应用
-        initApp();
+        // 初始化页面
+        window.onload = init;
     </script>
 </body>
+
 </html>
